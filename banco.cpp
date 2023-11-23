@@ -520,7 +520,6 @@ void gestionarEstadoCuenta() {
 // funcion para hacer la asociacion de cedula con numero de cuenta
 void crearProducto(vector<CLIENTE>& banco)
 {
-    int indexCliente;
     string cedulaPersona;
     string numeroCuenta;
     system("cls");
@@ -599,9 +598,6 @@ void consultarSaldo(vector<CLIENTE> banco)
 void consultarDisponible(vector<CLIENTE> banco) 
 {
     string numeroCuenta;
-    string cedula;
-    int posicionBanco;
-    int posicionCuenta;
     system("cls");
     cout << "\n==========================================" << endl;
     cout << "Consultar Disponible" << endl;
