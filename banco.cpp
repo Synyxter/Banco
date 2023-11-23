@@ -1157,7 +1157,8 @@ void retiroTarjetaDeCredito(vector<CLIENTE>& banco)
 
 // Función para realizar transferencias entre cuentas
 void transferencia(vector<CLIENTE>& banco) 
-{
+{   
+    system("cls");
     int montoTransferencia;
     string numeroCuentaOrigen;
     string numeroCuentaDestino;
