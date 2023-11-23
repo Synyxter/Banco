@@ -606,11 +606,6 @@ void consultarSaldo(vector<CLIENTE> banco)
         } else if (cuenta.codCuenta == "103") {
             // Tarjeta de crédito
             cout << "saldo: $" << cuenta.cupo - cuenta.saldo << endl;
-        } else if (cuenta.codCuenta == "101" || 
-                    cuenta.codCuenta == "105" || 
-                    cuenta.codCuenta == "106") {
-            // Cuenta de Ahorros, Nequi, Fiducuenta
-            cout << "No aplica para este tipo de cuenta." << endl;
         } else
          {
             // Otros tipos de cuenta
