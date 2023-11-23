@@ -1392,6 +1392,7 @@ int main()
     } while (opcion != 0);
 
     getch();
+    guardarDatos(banco);
     return 0;
 }
 
