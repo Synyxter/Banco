@@ -1232,6 +1232,7 @@ void transferencia(vector<CLIENTE>& banco)
 //BLOQUE DE FUNCIONES PARA CANCELAR CUENTA
 // Función para realizar un retiro de una cuenta
 void realizarRetiro(CUENTA &cuenta) {
+        system("cls");
         // Verificar que la cuenta es de tipo Ahorros, CDT, Fiducuenta o Nequi
         if (cuenta.codCuenta == "101" || cuenta.codCuenta == "106" || cuenta.codCuenta == "107" || cuenta.codCuenta == "105") {
             int saldo = cuenta.saldo;
@@ -1243,15 +1244,17 @@ void realizarRetiro(CUENTA &cuenta) {
 }
 // Función para realizar una consignación en una cuenta
 void realizarConsignacion(CUENTA &cuenta) 
-{
+{       system("cls");
         int saldo = cuenta.saldo;
         cuenta.saldo = 0;  // Dejar el saldo en cero
         cout << "Se realizó una consignación de $" << saldo << " por la cancelación de la cuenta corriente." << endl;
+        getch();
 }
 
 // Función para pagar el saldo y cancelar productos asociados a la cuenta
 void pagarSaldoYCancelarProductos(CUENTA &cuenta, CLIENTE &cliente) 
-{
+{   
+    system("cls");
     int saldo = cuenta.saldo;
 
     // Pagar (consignar) el saldo
@@ -1268,12 +1271,13 @@ void pagarSaldoYCancelarProductos(CUENTA &cuenta, CLIENTE &cliente)
     }
 
     cout << "Los productos asociados a la cuenta han sido cancelados." << endl;
+    getch();
 }
 
 // Función para emitir un paz y salvo al cliente
 void emitirPazYSalvo(CLIENTE &cliente) 
 {
-    system("cls");  // Limpia la pantalla
+    system("cls");  
 
     cout << "\n==============================" << endl;
     cout << "       Paz y Salvo" << endl;
@@ -1281,8 +1285,6 @@ void emitirPazYSalvo(CLIENTE &cliente)
 
     cout << "Cliente: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido << endl;
     cout << "Cedula: " << cliente.datosBasicos.cedula << endl;
-
-    // Puedes agregar más información según tus necesidades
 
     cout << "\nEstado de cuentas:" << endl;
     for (CUENTA cuenta : cliente.cuentas) {
@@ -1302,12 +1304,12 @@ void emitirPazYSalvo(CLIENTE &cliente)
     cout << "\n==============================" << endl;
 
     cout << "\nSe ha emitido un paz y salvo al cliente." << endl;
-    getch();  // Espera a que el usuario presione una tecla antes de continuar
+    getch(); 
 }
 
 // Función para cancelar una cuenta
 void cancelarCuenta(vector<CLIENTE>& banco) 
-{
+{   system("cls");
     string numeroCuenta;
     cout << "Ingrese el numero de la cuenta: ";
     cin >> numeroCuenta;
@@ -1348,6 +1350,7 @@ void cancelarCuenta(vector<CLIENTE>& banco)
 
         // Cambiar el estado a 'C' (Cancelado)
     }
+    getch();
 }
 
 //MENU DE FUNCIONES DE CONSIGNACION/RETIRO/TRANSFERENCIA/CANCELAR
