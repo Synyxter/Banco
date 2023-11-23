@@ -276,9 +276,9 @@ CLIENTE& obtenerCliente(vector<CLIENTE>& banco, string cedula="", string numeroC
 }
 
 //Busca la cuenta de un cliente por numero de cuenta
-CUENTA obtenerCuenta(vector<CUENTA>& cuentas, string numeroCuenta){
+CUENTA& obtenerCuenta(vector<CUENTA>& cuentas, string numeroCuenta){
     CUENTA cuentaNula;
-    for(CUENTA cuenta : cuentas){
+    for(CUENTA& cuenta : cuentas){
         if(cuenta.numeroCuenta == numeroCuenta){
             return cuenta;
         }
@@ -449,8 +449,7 @@ void crearCuenta(vector<CLIENTE>& banco){
         }else {
 
             cout <<endl;
-            cuenta.estado.cod = 'A';
-            cuenta.estado.descripcion = "Activa";
+            
             // Aplicar restricciones según el tipo de cuenta
             if (cuenta.codCuenta == "101" || // Cuenta de Ahorros
                 cuenta.codCuenta == "105" || // Nequi
@@ -562,12 +561,14 @@ void crearProducto(vector<CLIENTE>& banco)
     {
         cout << "Digite el numero de la cuenta: ";
         cin >> numeroCuenta;
-        CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
-        if(cliente.datosBasicos.cedula == ""){
+        CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        if(cuenta.numeroCuenta == ""){
             cout << "El numero de la cuenta no existe.";
             getch();
         }else 
         {
+            cuenta.estado.cod = 'A';
+            cuenta.estado.descripcion = "Activa";
             producto.cedula = cedulaPersona;
             producto.numeroCuenta = numeroCuenta;
             cliente.productos.push_back(producto);
@@ -594,17 +595,17 @@ void consultarSaldo(vector<CLIENTE> banco)
         getch();
     }else {
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
-            // Mostrar disponible según el tipo de cuenta
+            // Mostrar saldo según el tipo de cuenta
         if (cuenta.codCuenta == "102") {
             // Cuenta corriente
             if (cuenta.saldo < 0) {
-                cout << "No tiene disponible." << endl;
+                cout << "No tiene saldo." << endl;
             } else {
-                cout << "Disponible: $" << cuenta.saldo + cuenta.cupo << endl;
+                cout << "saldo: $" << cuenta.saldo + cuenta.cupo << endl;
             }
         } else if (cuenta.codCuenta == "103") {
             // Tarjeta de crédito
-            cout << "Disponible: $" << cuenta.cupo - cuenta.saldo << endl;
+            cout << "saldo: $" << cuenta.cupo - cuenta.saldo << endl;
         } else if (cuenta.codCuenta == "101" || 
                     cuenta.codCuenta == "105" || 
                     cuenta.codCuenta == "106") {
@@ -613,7 +614,7 @@ void consultarSaldo(vector<CLIENTE> banco)
         } else
          {
             // Otros tipos de cuenta
-            cout << "Disponible: $" << cuenta.saldo << endl;
+            cout << "saldo: $" << cuenta.saldo << endl;
         }
     
         getch();   
@@ -665,18 +666,19 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
     float montoAbono;
     string cedula;
     string numeroCuenta;
+    system("cls");
     cout << "Ingrese el numero de la cuenta: " <<endl;
     cin >> numeroCuenta;
-    CLIENTE cliente = obtenerCliente(banco, "", numeroCuenta);
+    CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
     if(cliente.datosBasicos.cedula == ""){
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else {
 
-        CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         cout << "Ingrese el monto a abonar: ";
         cin >> montoAbono;
-
+        int saldoAnterior = cuenta.saldo;
         if (cuenta.estado.descripcion == "Activa" ||
             cuenta.estado.descripcion == "Inactiva" ||
             cuenta.estado.descripcion == "Embargada") 
@@ -706,7 +708,15 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
                            cuenta.saldo += montoAbono;
                         }
                     }
-                    cout << "Abono exitoso. Nuevo disponible: $" <<cuenta.disponible << endl;
+                    system("cls");
+                    cout << "Abono exitoso."<< endl;
+                    cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
+                    cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
+                    cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
+                    cout << "Valor abonado: $" << montoAbono <<endl;
+                    cout << "Saldo Anterior: $" << saldoAnterior <<endl;
+                    cout << "Saldo actualizado: $" << cuenta.saldo <<endl;
+                    cout << "Disponible: $" <<cuenta.disponible << endl;
                 } 
                 else 
                 {
@@ -1346,13 +1356,13 @@ void menuTransacciones(vector<CLIENTE>& banco)
             cancelarCuenta(banco);
             break;
             case 5:
-                opcionPrincipal = 5;
+                opcionPrincipal = 0;
                 break;
 
             default:
                 break;
         }
-    } while (opcionPrincipal != 3);
+    } while (opcionPrincipal != 0);
     getch();
 }
 
