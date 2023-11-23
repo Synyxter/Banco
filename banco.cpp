@@ -612,10 +612,6 @@ void consultarSaldo(vector<CLIENTE> banco)
             // Cuenta de Ahorros, Nequi, Fiducuenta
             cout << "saldo: $" << cuenta.disponible; // saldo es lo mismo que disponible
         }
-        else 
-        {
-            cout << "Hay un error en algun dato." << endl;
-        }
         getch();   
     }
 }        
@@ -654,10 +650,7 @@ void consultarDisponible(vector<CLIENTE> banco)
         } else if (cuenta.codCuenta == "103") {
             // Tarjeta de crédito
             cout << "Disponible: $" << cuenta.cupo - cuenta.saldo << endl;
-        } else {
-            cout << "Hay un error en algun dato." << endl;
         }
-        
         getch();
     }
 
