@@ -661,6 +661,68 @@ void consultarDisponible(vector<CLIENTE> banco)
 
 //BLOQUE DE FUNCIONES ENCARGADAS DE CONSIGNAR 
 //funcion que controla las consignaciones de cuenta corriente
+
+// Funcion para consignar en cuenta de ahorros
+
+void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
+{
+    float montoAbono;
+    string numeroCuenta;
+    
+    cout << "Ingrese el numero de la cuenta: " << endl;
+    cin >> numeroCuenta;
+
+    CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
+
+    if(cliente.datosBasicos.cedula == "")
+    {
+        cout << "El numero de cuenta no existe." << endl;
+        getch();
+    } 
+    else 
+    {
+        CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+
+        cout << "Ingrese el monto a abonar: ";
+        cin >> montoAbono;
+
+        if (cuenta.estado.descripcion == "Activa" || 
+            cuenta.estado.descripcion == "Inactiva" || 
+            cuenta.estado.descripcion == "Embargada")
+        {
+            if (cuenta.codCuenta == "101" || 
+                cuenta.codCuenta == "105 "|| 
+            cuenta.codCuenta == "106")
+            {
+                // Cuenta de Ahorro
+                if (montoAbono > 0)
+                {
+                    // Aumenta el saldo con el monto abonado
+                    cuenta.saldo += montoAbono;
+                    cuenta.disponible= cuenta.saldo;
+
+                    cout << "Abono exitoso. Nuevo saldo: $" << cuenta.saldo << endl;
+                }
+                else
+                {
+                    cout << "El monto a abonar debe ser mayor que cero." << endl;
+                }
+            }
+            else
+            {
+                cout << "Esta cuenta no permite abonos." << endl;
+            }
+        }
+        else if (cuenta.estado.descripcion == "Bloqueada" ||
+                cuenta.estado.descripcion == "Eliminada") 
+        {
+            cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
+        }
+        getch();
+    }
+}
+
+
 void consignarCuentaCorriente(vector<CLIENTE> &banco) 
 {
     float montoAbono;
@@ -745,12 +807,12 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
     string numeroCuenta;
     cout << "Ingrese el numero de la cuenta: " <<endl;
     cin >> numeroCuenta;
-    CLIENTE cliente = obtenerCliente(banco, "", numeroCuenta);
+    CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
     if(cliente.datosBasicos.cedula == ""){
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else {
-        CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         cout << "Ingrese el monto a abonar: ";
         cin >> montoAbono;
 
@@ -792,12 +854,12 @@ void consignarPrestamo(vector<CLIENTE>& banco)
     string numeroCuenta;
     cout << "Ingrese el numero de la cuenta: " <<endl;
     cin >> numeroCuenta;
-    CLIENTE cliente = obtenerCliente(banco, "", numeroCuenta);
+    CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
     if(cliente.datosBasicos.cedula == ""){
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else {
-        CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         cout << "Ingrese el monto a abonar: ";
         cin >> montoAbono;
         if (cuenta.estado.cod == 'A' ||
@@ -1247,7 +1309,7 @@ void menuTransacciones(vector<CLIENTE>& banco)
 
                     switch (opcionSub) {
                         case 101:
-                            cout << "Para este tipo de cuenta no puede consignar.";
+                            consignarCuentaTipoAhorro(banco);
                             break;
 
                         case 102:
@@ -1263,11 +1325,11 @@ void menuTransacciones(vector<CLIENTE>& banco)
                             break;
 
                         case 105:
-                            cout << "Para este tipo de cuenta no puede consignar.";
+                            consignarCuentaTipoAhorro(banco);
                             break;
 
                         case 106:
-                            cout << "Para este tipo de cuenta no puede consignar.";
+                            consignarCuentaTipoAhorro(banco);
                             break;
 
                         case 107:
