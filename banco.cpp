@@ -679,7 +679,7 @@ void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
     else 
     {
         CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
-
+        int saldoAnterior = cuenta.saldo;
         cout << "Ingrese el monto a abonar: ";
         cin >> montoAbono;
 
@@ -715,6 +715,15 @@ void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
         {
             cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
         }
+        system("cls");
+                    cout << "Abono exitoso."<< endl;
+                    cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
+                    cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
+                    cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
+                    cout << "Valor abonado: $" << montoAbono <<endl;
+                    cout << "Saldo Anterior: $" << saldoAnterior <<endl;
+                    cout << "Saldo actualizado: $" << cuenta.saldo <<endl;
+                    cout << "Disponible: $" <<cuenta.disponible << endl;
         getch();
     }
 }
@@ -799,7 +808,7 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
 
 // funcion que controla la consignacion en tarjetas de credito
 void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
-{
+{   
     float montoAbono;
     string numeroCuenta;
     cout << "Ingrese el numero de la cuenta: " <<endl;
@@ -808,8 +817,10 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
     if(cliente.datosBasicos.cedula == ""){
         cout << "El numero de cuenta no existe."<<endl;
         getch();
-    } else {
+    } else
+     {
         CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        int saldoAnterior = cuenta.saldo;
         cout << "Ingrese el monto a abonar: ";
         cin >> montoAbono;
 
@@ -831,9 +842,15 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
                     // y se aumenta el disponible más no el cupo. 
                     cuenta.saldo -= montoAbono;
                     cuenta.disponible += montoAbono;
-                    cout << "Consignación realizada con éxito." << endl;
-                    cout << "Saldo de tarjeta de credito actual: " <<cuenta.saldo << endl;
-                    cout << "Disponible de tarjeta de credito actual: " <<cuenta.disponible << endl;
+                    system("cls");
+                    cout << "Abono exitoso."<< endl;
+                    cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
+                    cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
+                    cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
+                    cout << "Valor abonado: $" << montoAbono <<endl;
+                    cout << "Saldo Anterior: $" << saldoAnterior <<endl;
+                    cout << "Saldo actualizado: $" << cuenta.saldo <<endl;
+                    cout << "Disponible: $" <<cuenta.disponible << endl;
                 } 
                 else 
                 {
@@ -841,6 +858,7 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
                 }
             }
         }
+
         getch();
     }
 }
@@ -857,6 +875,7 @@ void consignarPrestamo(vector<CLIENTE>& banco)
         getch();
     } else {
         CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        int saldoAnterior = cuenta.saldo;
         cout << "Ingrese el monto a abonar: ";
         cin >> montoAbono;
         if (cuenta.estado.cod == 'A' ||
@@ -871,6 +890,15 @@ void consignarPrestamo(vector<CLIENTE>& banco)
             }
         
         }
+        system("cls");
+                    cout << "Abono exitoso."<< endl;
+                    cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
+                    cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
+                    cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
+                    cout << "Valor abonado: $" << montoAbono <<endl;
+                    cout << "Saldo Anterior: $" << saldoAnterior <<endl;
+                    cout << "Saldo actualizado: $" << cuenta.saldo <<endl;
+                    cout << "Disponible: $" <<cuenta.disponible << endl;
         getch();
     }
 }
