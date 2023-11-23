@@ -663,6 +663,7 @@ void consultarDisponible(vector<CLIENTE> banco)
 
 void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
 {
+    system ("cls");
     float montoAbono;
     string numeroCuenta;
     
@@ -996,6 +997,7 @@ void retiroCuentasTipoAhorro(vector<CLIENTE>& banco)
     }else {
 
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        int saldoAnterior= cuenta.saldo;
         cout << "Ingrese el valor  a retirar :" << endl;
         cin >> valorRetiro;
         if ((cuenta.codCuenta == "101" || 
@@ -1015,6 +1017,15 @@ void retiroCuentasTipoAhorro(vector<CLIENTE>& banco)
             cout << "Error: El monto a retirar es mayor que el saldo o disponible." << endl;
             }
         }
+        system("cls");
+                    cout << "Abono exitoso."<< endl;
+                    cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
+                    cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
+                    cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
+                    cout << "Valor Retirado: $" << valorRetiro <<endl;
+                    cout << "Saldo Anterior: $" << saldoAnterior <<endl;
+                    cout << "Saldo actualizado: $" << cuenta.saldo <<endl;
+                    cout << "Disponible: $" <<cuenta.disponible << endl;
         getch();    
     }
     
@@ -1033,7 +1044,8 @@ void realizarRetiroCuentaCorriente(vector<CLIENTE>& banco)
         getch();
     } else {
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
-        cout << "Ingrese el valor  a retirar :" << endl;
+        int saldoAnterior= cuenta.saldo;
+        cout << "Ingrese el valor a retirar: " << endl;
         cin >> valorRetiro;
         // 1. Si tiene saldo cero (0)
         if (cuenta.saldo == 0) 
@@ -1062,21 +1074,45 @@ void realizarRetiroCuentaCorriente(vector<CLIENTE>& banco)
         // 3. Si tiene saldo < 0 (saldo negativo)
         else
         {
-           cuenta.saldo -= valorRetiro;
+            cuenta.saldo -= valorRetiro;
             if (cuenta.saldo < -cuenta.cupo) 
             {
                 cout << "Error: Saldo negativo excede el límite del cupo." << endl;
                 // Revertir el cambio en el saldo
-               cuenta.saldo += valorRetiro;
+                cuenta.saldo += valorRetiro;
             } else 
             {
                 cuenta.disponible = cuenta.cupo + cuenta.saldo;
                 cout << "Retiro exitoso. Nuevo saldo: " << cuenta.saldo << ", Nuevo disponible: " << cuenta.disponible << endl;
             }
+
+            system("cls");
+            cout << "Abono exitoso."<< endl;
+            cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido << endl;
+            cout << "Cedula: " << cliente.datosBasicos.cedula << endl;
+            cout << "Numero de producto: " << cuenta.numeroCuenta << endl;
+            cout << "Valor Retirado: $" << valorRetiro << endl;
+            cout << "Saldo Anterior: $" << saldoAnterior << endl;
+
+            if (cuenta.saldo < 0) {
+                cout << "Saldo actualizado: $" << cuenta.saldo << " (Saldo en rojo)" << endl;
+                cout << "Disponible: $" << cuenta.disponible;
+
+                // Mostrar información de sobregiro
+                if (cuenta.saldo < -cuenta.cupo) {
+                    cout << " (Sobregiro excede el límite del cupo)" << endl;
+                } else {
+                    cout << " (Sobregiro dentro del límite del cupo)" << endl;
+                }
+            } else {
+                cout << "Saldo actualizado: $" << cuenta.saldo << endl;
+                cout << "Disponible: $" << cuenta.disponible << endl;
+            }
         }
         getch();
     }
 }
+
 
 //Funcion para hacer retiro de tarjeta de credito
 void retiroTarjetaDeCredito(vector<CLIENTE>& banco) 
@@ -1091,6 +1127,7 @@ void retiroTarjetaDeCredito(vector<CLIENTE>& banco)
         getch();
     } else {
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        int saldoAnterior= cuenta.saldo;
         cout << "Ingrese el valor  a retirar :" << endl;
         cin >> valorRetiro;
 
@@ -1103,10 +1140,16 @@ void retiroTarjetaDeCredito(vector<CLIENTE>& banco)
         cuenta.saldo += valorRetiro;
         cuenta.disponible -= valorRetiro;
 
-        // Mostrar información de la transacción
-        cout << "Retiro exitoso." << endl;
-        cout << "Nuevo saldo: " << cuenta.saldo << endl;
-        cout << "Nuevo disponible: " << cuenta.disponible << endl;
+        // SALIDA
+        system("cls");
+                    cout << "Abono exitoso."<< endl;
+                    cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
+                    cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
+                    cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
+                    cout << "Valor Retirado: $" << valorRetiro <<endl;
+                    cout << "Saldo Anterior: $" << saldoAnterior <<endl;
+                    cout << "Saldo actualizado: $" << cuenta.saldo <<endl;
+                    cout << "Disponible: $" <<cuenta.disponible << endl;
         getch();
     }
 }
@@ -1160,13 +1203,24 @@ void transferencia(vector<CLIENTE>& banco)
             } else {
                 // Realizar la transferencia
                cuentaOrigen.saldo -= montoTransferencia;
-                cuentaDestino.saldo += montoTransferencia;
+               cuentaDestino.saldo  += montoTransferencia;
+         
+            system("cls");
+            cout << "Transferencia exitosa." << endl;
+            cout << "Cuenta de origen:" << endl;
+            cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido << endl;
+            cout << "Cedula: " << clienteOrigen.datosBasicos.cedula << endl;
+            cout << "Numero de producto: " << cuentaOrigen.numeroCuenta << endl;
+            cout << "Saldo actualizado de la cuenta de origen: $" << cuentaOrigen.saldo << endl;
 
-                // Mostrar información de la transacción
-                cout << "Transferencia exitosa." << endl;
-                cout << "Nuevo saldo de la cuenta de origen: " <<cuentaOrigen.saldo << endl;
-                cout << "Nuevo saldo de la cuenta de destino: " << cuentaDestino.saldo << endl;
-                getch();
+            cout << "Cuenta de destino:" << endl;
+            cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido << endl;
+            cout << "Cedula: " << clienteDestino.datosBasicos.cedula << endl;
+            cout << "Numero de producto: " << cuentaDestino.numeroCuenta << endl;
+            cout << "Saldo actualizado de la cuenta de destino: $" << cuentaDestino.saldo << endl;
+
+            cout << "Valor transferido: $" << montoTransferencia << endl;
+            getch();
             }
         }
 
