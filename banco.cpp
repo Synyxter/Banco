@@ -125,9 +125,21 @@ void guardarPersonas(vector<CLIENTE>& banco){
             archivo << ";";
             archivo << cliente.datosBasicos.cedula;
             archivo << ";";
+            archivo << cliente.datosBasicos.fechaNacimiento.dia;
+            archivo << ";";
+            archivo << cliente.datosBasicos.fechaNacimiento.mes;
+            archivo << ";";
+            archivo << cliente.datosBasicos.fechaNacimiento.anio;
+            archivo << ";";
             archivo << cliente.datosBasicos.edad;
             archivo << ";";
-            archivo << cliente.datosBasicos.sexo<<endl;
+            archivo << cliente.datosBasicos.correoElectronico;
+            archivo << ";";
+            archivo << cliente.datosBasicos.sexo;
+            archivo << ";";
+            archivo << cliente.datosBasicos.estatura;
+            archivo << ";";
+            archivo << cliente.datosBasicos.telefono<<endl;
         }
         archivo.close(); // Cierra el archivo cuando hayas terminado
     } else {
@@ -149,11 +161,27 @@ void guardarCuentas(vector<CLIENTE>& banco){
                 archivoCuentas << ";";
                 archivoCuentas << cuenta.numeroCuenta;
                 archivoCuentas << ";";
+                archivoCuentas << cuenta.cupo;
+                archivoCuentas << ";";
                 archivoCuentas << cuenta.saldo;
                 archivoCuentas << ";";
                 archivoCuentas << cuenta.disponible;
                 archivoCuentas << ";";
-                archivoCuentas << cuenta.estado.cod<<endl;
+                archivoCuentas << cuenta.estado.cod;
+                archivoCuentas << ";";
+                archivoCuentas << cuenta.estado.descripcion;
+                archivoCuentas << ";";
+                archivoCuentas << cuenta.plazo.dia_plazo;
+                archivoCuentas << ";";
+                archivoCuentas << cuenta.plazo.mes_plazo;
+                archivoCuentas << ";";
+                archivoCuentas << cuenta.plazo.anio_plazo;
+                archivoCuentas << ";";
+                archivoCuentas << cuenta.fechaCreacion.dia_creacion_cuenta;
+                archivoCuentas << ";";
+                archivoCuentas << cuenta.fechaCreacion.mes_creacion_cuenta;
+                archivoCuentas << ";";
+                archivoCuentas << cuenta.fechaCreacion.anio_creacion_cuenta<<endl;
             }
         }
         archivoCuentas.close(); // Cierra el archivo cuando hayas terminado
@@ -227,10 +255,11 @@ bool verificarTipoCuentaCliente(vector<TIPO_DE_CUENTA> tipoCuentas, string codig
 }
 
 //Busca a un cliente por cedula o por numero de cuenta
-CLIENTE obtenerCliente(vector<CLIENTE>& banco, string cedula="", string numeroCuenta=""){
+CLIENTE& obtenerCliente(vector<CLIENTE>& banco, string cedula="", string numeroCuenta=""){
     CLIENTE clienteNulo;
-    for(CLIENTE cliente: banco)
-    {   if(cedula != ""){
+    for(CLIENTE& cliente: banco)
+    {   if(cedula != "")
+        {
             if(cliente.datosBasicos.cedula == cedula){
                 return cliente;
             }
@@ -296,7 +325,7 @@ void crearTipoCuenta(vector<CLIENTE>& banco){
     cout <<"Digite la cedula de la persona: ";
     cin >> cedulaPersona;
 
-    CLIENTE cliente = obtenerCliente(banco, cedulaPersona);
+    CLIENTE& cliente = obtenerCliente(banco, cedulaPersona);
     if(cliente.datosBasicos.cedula == ""){
         cout << "La persona no se encuentra registrada."<<endl;
         getch();
@@ -358,10 +387,10 @@ void crearPersona(vector<CLIENTE>& banco){
     cout << "Digite la cedula: ";
     cin >> cliente.datosBasicos.cedula;
     cout << "Digite la fecha de nacimiento (DD MM AAAA): " <<endl;
-    cin >> cliente.datosBasicos.fechaNacimiento.anio;
-    cin >> cliente.datosBasicos.fechaNacimiento.mes;
     cin >> cliente.datosBasicos.fechaNacimiento.dia;
-    cout << "Su fecha ha sido registrada como: " <<cliente.datosBasicos.fechaNacimiento.anio << "/" << cliente.datosBasicos.fechaNacimiento.mes << "/" << cliente.datosBasicos.fechaNacimiento.dia <<endl;
+    cin >> cliente.datosBasicos.fechaNacimiento.mes;
+    cin >> cliente.datosBasicos.fechaNacimiento.anio;
+    cout << "Su fecha ha sido registrada como: " <<cliente.datosBasicos.fechaNacimiento.dia << "/" << cliente.datosBasicos.fechaNacimiento.mes << "/" << cliente.datosBasicos.fechaNacimiento.anio <<endl;
     cout << "Digite la edad: ";
     cin >> cliente.datosBasicos.edad;
     cout << "Digite el correo electronico: ";
@@ -378,19 +407,19 @@ void crearPersona(vector<CLIENTE>& banco){
 }
 
 
-//FUNCION QUE ANALIZA LA HORA EXACTA DE CREACION DE CUALQUIER TIPO DE CUENTA
-bool fechaCreacionCuenta(FECHACREACION &fechaCreacion)
+//Obtiene la fecha actual
+FECHACREACION obtenerFechaActual()
 { 
     // Obtener la fecha actual
     time_t now = time(0);
     tm *ltm = localtime(&now);
-
+    FECHACREACION fechaCreacion;
     // Asignar la fecha actual a la estructura FECHACREACION
     fechaCreacion.dia_creacion_cuenta = ltm->tm_mday;
     fechaCreacion.mes_creacion_cuenta = 1 + ltm->tm_mon;
     fechaCreacion.anio_creacion_cuenta = 1900 + ltm->tm_year;
 
-    return true;
+    return fechaCreacion;
 
 } 
 
@@ -406,7 +435,7 @@ void crearCuenta(vector<CLIENTE>& banco){
     cout << "Digite la cedula de la persona para crear la cuenta: ";
     cin >> cedulaPersona;
     cout <<endl;
-    CLIENTE cliente = obtenerCliente(banco, cedulaPersona);
+    CLIENTE& cliente = obtenerCliente(banco, cedulaPersona);
     if(cliente.datosBasicos.cedula == ""){
         cout << "La persona no se encuentra registrada."<<endl;
         getch();
@@ -450,10 +479,7 @@ void crearCuenta(vector<CLIENTE>& banco){
                 cout << "La fecha de plazo queda registrada como: " << cuenta.plazo.dia_plazo << "/" << cuenta.plazo.mes_plazo << "/" << cuenta.plazo.anio_plazo<<endl;
             }
             //fecha de creacion de cuenta (para todos los tipos de cuenta)
-            cout << "A continuacion, se pide la fecha de creacion para la cuenta (DD MM AAAA): ";
-            cin >> cuenta.fechaCreacion.dia_creacion_cuenta;
-            cin >> cuenta.fechaCreacion.mes_creacion_cuenta; 
-            cin >> cuenta.fechaCreacion.anio_creacion_cuenta;
+            cuenta.fechaCreacion = obtenerFechaActual();
             cout << "La fecha de creacion fue exitosamente registrada como: " << cuenta.fechaCreacion.dia_creacion_cuenta << "/" << cuenta.fechaCreacion.mes_creacion_cuenta << "/" << cuenta.fechaCreacion.anio_creacion_cuenta<<endl;
 
             stringstream numeroCuentaStream;
@@ -528,7 +554,7 @@ void crearProducto(vector<CLIENTE>& banco)
     cout << "==========================================" << endl;
     cout << "Digite la cedula de la persona: ";
     cin >> cedulaPersona;
-    CLIENTE cliente = obtenerCliente(banco, cedulaPersona);
+    CLIENTE& cliente = obtenerCliente(banco, cedulaPersona);
     if(cliente.datosBasicos.cedula == ""){
         cout << "La persona no se encuentra registrada."<<endl;
         getch();
@@ -536,7 +562,7 @@ void crearProducto(vector<CLIENTE>& banco)
     {
         cout << "Digite el numero de la cuenta: ";
         cin >> numeroCuenta;
-        cliente = obtenerCliente(banco, "", numeroCuenta);
+        CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
         if(cliente.datosBasicos.cedula == ""){
             cout << "El numero de la cuenta no existe.";
             getch();
@@ -780,84 +806,84 @@ void consignarPrestamo(vector<CLIENTE>& banco)
     }
 }
 
-void consignarCdt(vector<CLIENTE>& banco) 
-{
-    string numeroCuenta;
-    int montoAbono;
-    cout << "Ingrese su numero de cuenta: ";
-    cin >> numeroCuenta;
-    CLIENTE cliente = obtenerCliente(banco, "", numeroCuenta);
-    if(cliente.datosBasicos.cedula == ""){
-        cout << "El numero de cuenta no existe."<<endl;
-        getch();
-    } else {
-        CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
-        cout << "Ingrese el valor a consignar :" << endl;
-        cin >> montoAbono;
+// void consignarCdt(vector<CLIENTE>& banco) 
+// {
+//     string numeroCuenta;
+//     int montoAbono;
+//     cout << "Ingrese su numero de cuenta: ";
+//     cin >> numeroCuenta;
+//     CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
+//     if(cliente.datosBasicos.cedula == ""){
+//         cout << "El numero de cuenta no existe."<<endl;
+//         getch();
+//     } else {
+//         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+//         cout << "Ingrese el valor a consignar :" << endl;
+//         cin >> montoAbono;
 
-    if (cuenta.estado.descripcion == "Activa" || 
-        cuenta.estado.descripcion == "Inactiva" || 
-        cuenta.estado.descripcion == "Embargada")
-        {
-            // CDT
-            if (cuenta.plazo.dia_plazo > 0 && 
-            cuenta.plazo.mes_plazo > 0 && 
-            cuenta.plazo.anio_plazo > 0)
-            {
-                if (fechaCreacionCuenta(cuenta.fechaCreacion))
-                {
-                    if (montoAbono > 0)
-                    {
-                        // Calcula los intereses según el plazo
-                        float intereses = 0.0;
-                        if (cuenta.plazo.dia_plazo == 30) 
-                        {
-                            intereses = montoAbono * 0.03;
-                        } 
-                        else if (cuenta.plazo.dia_plazo == 60) 
-                        {
-                            intereses = montoAbono * 0.05;
-                        } 
-                        else if (cuenta.plazo.dia_plazo == 90)
-                        {
-                            intereses = montoAbono * 0.07;
-                        } 
-                        else if (cuenta.plazo.dia_plazo == 180) 
-                        {
-                            intereses = montoAbono * 0.09;
-                        } 
-                        else if (cuenta.plazo.dia_plazo == 365) 
-                        {
-                            intereses = montoAbono * 0.15;
-                        }
+//     if (cuenta.estado.descripcion == "Activa" || 
+//         cuenta.estado.descripcion == "Inactiva" || 
+//         cuenta.estado.descripcion == "Embargada")
+//         {
+//             // CDT
+//             if (cuenta.plazo.dia_plazo > 0 && 
+//             cuenta.plazo.mes_plazo > 0 && 
+//             cuenta.plazo.anio_plazo > 0)
+//             {
+//                 if (obtenerFechaActual())
+//                 {
+//                     if (montoAbono > 0)
+//                     {
+//                         // Calcula los intereses según el plazo
+//                         float intereses = 0.0;
+//                         if (cuenta.plazo.dia_plazo == 30) 
+//                         {
+//                             intereses = montoAbono * 0.03;
+//                         } 
+//                         else if (cuenta.plazo.dia_plazo == 60) 
+//                         {
+//                             intereses = montoAbono * 0.05;
+//                         } 
+//                         else if (cuenta.plazo.dia_plazo == 90)
+//                         {
+//                             intereses = montoAbono * 0.07;
+//                         } 
+//                         else if (cuenta.plazo.dia_plazo == 180) 
+//                         {
+//                             intereses = montoAbono * 0.09;
+//                         } 
+//                         else if (cuenta.plazo.dia_plazo == 365) 
+//                         {
+//                             intereses = montoAbono * 0.15;
+//                         }
 
-                        // Actualiza el saldo con los intereses
-                       cuenta.saldo += montoAbono + intereses;
-                        cout << "Abono exitoso. Nuevo saldo: $" << cuenta.saldo << endl;
-                    }
-                    else
-                    {
-                        cout << "El monto a abonar debe ser mayor que cero." << endl;
-                    }
-                }
-                else
-                {
-                    cout << "No puede abonar a una cuenta con fecha de creación futura" << endl;
-                }
-            }
-            else
-            {
-                cout << "El plazo debe ser mayor que cero." << endl;
-            }
-        } 
-        else if (cuenta.estado.descripcion == "Bloqueada" ||
-        cuenta.estado.descripcion == "Eliminada") 
-        {
-            cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
-        }
-        getch();
-    }
-}
+//                         // Actualiza el saldo con los intereses
+//                        cuenta.saldo += montoAbono + intereses;
+//                         cout << "Abono exitoso. Nuevo saldo: $" << cuenta.saldo << endl;
+//                     }
+//                     else
+//                     {
+//                         cout << "El monto a abonar debe ser mayor que cero." << endl;
+//                     }
+//                 }
+//                 else
+//                 {
+//                     cout << "No puede abonar a una cuenta con fecha de creación futura" << endl;
+//                 }
+//             }
+//             else
+//             {
+//                 cout << "El plazo debe ser mayor que cero." << endl;
+//             }
+//         } 
+//         else if (cuenta.estado.descripcion == "Bloqueada" ||
+//         cuenta.estado.descripcion == "Eliminada") 
+//         {
+//             cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
+//         }
+//         getch();
+//     }
+// }
 
 //BLOQUE DE FUNCIONES DE RETIROS
 void retiroCuentasTipoAhorro(vector<CLIENTE>& banco) 
@@ -1235,7 +1261,9 @@ void menuTransacciones(vector<CLIENTE>& banco)
                             break;
 
                         case 107:
-                            consignarCdt(banco);
+                            cout << "que mas pues mijo";
+                            getch();
+                            // consignarCdt(banco);
                             break;
 
                         case 108:
