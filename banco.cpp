@@ -606,6 +606,11 @@ void consultarSaldo(vector<CLIENTE> banco)
         } else if (cuenta.codCuenta == "103") {
             // Tarjeta de crédito
             cout << "saldo: $" << cuenta.cupo - cuenta.saldo << endl;
+        } else if (cuenta.codCuenta == "101" || 
+                    cuenta.codCuenta == "105" || 
+                    cuenta.codCuenta == "106") {
+            // Cuenta de Ahorros, Nequi, Fiducuenta
+            cout << "saldo: $" << cuenta.disponible; // saldo es lo mismo que disponible
         } else
          {
             // Otros tipos de cuenta
@@ -634,6 +639,12 @@ void consultarDisponible(vector<CLIENTE> banco)
     } else {
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         // Mostrar disponible según el tipo de cuenta
+        if (cuenta.codCuenta == "101" || 
+            cuenta.codCuenta == "105" || 
+            cuenta.codCuenta == "106"){
+            cout << "disponible: $" << cuenta.saldo; //disponible es lo mismo que saldo
+
+            }
         if (cuenta.codCuenta == "102") {
             // Cuenta corriente
             if (cuenta.saldo < 0) {
