@@ -1447,13 +1447,13 @@ void transferencia(vector<CLIENTE>& banco)
     }else {
         cout << "Digite el numero de la cuenta a transferir: ";
         cin >> numeroCuentaDestino;
-        CLIENTE clienteDestino = obtenerCliente(banco, "", numeroCuentaDestino);
+        CLIENTE& clienteDestino = obtenerCliente(banco, "", numeroCuentaDestino);
         if(clienteDestino.datosBasicos.cedula == ""){
             cout << "El numero de cuenta no existe."<<endl;
             getch();
         } else {
-            CUENTA cuentaOrigen = obtenerCuenta(clienteOrigen.cuentas, numeroCuentaOrigen);
-            CUENTA cuentaDestino = obtenerCuenta(clienteDestino.cuentas, numeroCuentaOrigen);
+            CUENTA& cuentaOrigen = obtenerCuenta(clienteOrigen.cuentas, numeroCuentaOrigen);
+            CUENTA& cuentaDestino = obtenerCuenta(clienteDestino.cuentas, numeroCuentaDestino);
             // Solicitar el monto a transferir
             cout << "Ingrese el monto a transferir: ";
             cin >> montoTransferencia;
