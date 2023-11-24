@@ -343,7 +343,7 @@ void cargarPersonas(vector<CLIENTE>& banco){
                     cliente.datosBasicos.sexo = dato[0];
                 } else if(contador == 10){
                     cliente.datosBasicos.estatura = stof(dato);
-                } else if(contador == 10){
+                } else if(contador == 11){
                     cliente.datosBasicos.telefono = dato;
                 }
                 contador++;
@@ -402,13 +402,13 @@ void cargarCuentas(vector<CLIENTE>& banco){
                 }
                 contador++;
             }
-            for(CLIENTE cliente : banco){
-                for(PRODUCTO producto : cliente.productos){
-                    if(producto.numeroCuenta == cuenta.numeroCuenta){
-                        cliente.cuentas.push_back(cuenta);
-                        break;
+            for(CLIENTE& cliente : banco){
+                    for(PRODUCTO producto : cliente.productos){
+                        if(producto.numeroCuenta == cuenta.numeroCuenta){
+                            cliente.cuentas.push_back(cuenta);
+                            break;
+                        }
                     }
-                }
             }
         }
 
@@ -426,11 +426,11 @@ void cargarTipoCuentas(vector<CLIENTE>& banco){
         string linea;
         while (getline(archivoTipoCuentas, linea)) {
              int contador=1;
-             string cedula;
+             string cedula = "";
              TIPO_DE_CUENTA tipo_de_cuenta;
             // Realiza operaciones de procesamiento en cada línea leída
             istringstream ss(linea);
-            string dato;
+            string dato="";
         
             while (getline(ss, dato, ';')){
                 if(contador == 1){
@@ -442,7 +442,7 @@ void cargarTipoCuentas(vector<CLIENTE>& banco){
                 }
                 contador++;
             }
-            for(CLIENTE cliente : banco){
+            for(CLIENTE& cliente : banco){
                 if(cliente.datosBasicos.cedula == cedula){
                     cliente.tipoCuentas.push_back(tipo_de_cuenta);
                     break;
@@ -477,7 +477,7 @@ void cargarProductos(vector<CLIENTE>& banco){
                 } 
                 contador++;
             }
-            for(CLIENTE cliente : banco){
+            for(CLIENTE& cliente : banco){
                 if(cliente.datosBasicos.cedula == producto.cedula){
                     cliente.productos.push_back(producto);
                     break;
@@ -499,7 +499,6 @@ void cargarDatos(vector<CLIENTE>& banco){
     cargarProductos(banco);
     cargarCuentas(banco);
 }
-
 
 
 
