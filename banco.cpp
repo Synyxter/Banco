@@ -106,10 +106,6 @@ struct CLIENTE
     vector<PRODUCTO> productos;
 };
 
-CLIENTE cliente;
-CUENTA cuenta;
-TIPO_DE_CUENTA tipo_de_cuenta;
-PRODUCTO producto;
 
 //
 void limpiarArchivoPersonas(){
@@ -389,6 +385,49 @@ void cargarCuentas(vector<CLIENTE>& banco){
 
 }
 
+void cargarTipoCuentas(vector<CLIENTE>& banco){
+    TIPO_DE_CUENTA tipo_de_cuenta;
+     for(CLIENTE cliente : banco){
+        for(CUENTA cuenta : cliente.cuentas){
+            int codigo = stoi(cuenta.codCuenta);
+            switch (codigo) {
+            case 101:
+                tipo_de_cuenta.codigo = cuenta.codCuenta;
+                tipo_de_cuenta.descripcion = "Ahorros";
+                break;
+            case 102:
+                tipo_de_cuenta.codigo = cuenta.codCuenta;
+                tipo_de_cuenta.descripcion = "Corriente";
+                break;
+            case 103:
+                tipo_de_cuenta.codigo = cuenta.codCuenta;
+                tipo_de_cuenta.descripcion = "Tarjeta de credito";
+                break;
+            case 104:
+                tipo_de_cuenta.codigo = cuenta.codCuenta;
+                tipo_de_cuenta.descripcion = "Prestamo";
+                break;
+            case 105:
+                tipo_de_cuenta.codigo = cuenta.codCuenta;
+                tipo_de_cuenta.descripcion = "Nequi";
+                break;
+            case 106:
+                tipo_de_cuenta.codigo = cuenta.codCuenta;
+                tipo_de_cuenta.descripcion = "Fiducuenta";
+                break;
+            case 107:
+                tipo_de_cuenta.codigo = cuenta.codCuenta;
+                tipo_de_cuenta.descripcion = "CDT";
+                break;
+            default:
+                break;
+            }
+            cliente.tipoCuentas.push_back(tipo_de_cuenta);
+            
+        }
+     }
+}
+
 //Carga los datos de los productos que estan almacenados en el archivo productos.txt
 void cargarProductos(vector<CLIENTE>& banco){
      ifstream archivoProductos("productos.txt");
@@ -430,6 +469,7 @@ void cargarDatos(vector<CLIENTE>& banco){
     cargarPersonas(banco);
     cargarProductos(banco);
     cargarCuentas(banco);
+    cargarTipoCuentas(banco);
 }
 
 
@@ -500,6 +540,7 @@ void crearTipoCuenta(vector<CLIENTE>& banco){
    system("cls");  // Limpia la pantalla 
     int codigo;
     string cedulaPersona;
+    TIPO_DE_CUENTA tipo_de_cuenta;
     cout << "\n==========================================" << endl;
     cout <<"Tipos de cuenta"<<endl;
     cout << "==========================================" << endl;
@@ -568,7 +609,8 @@ void crearTipoCuenta(vector<CLIENTE>& banco){
 //PERSONA
 // Función para crear datos básicos de una persona e ingresar
 void crearPersona(vector<CLIENTE>& banco){
-   system("cls"); 
+   system("cls");
+    CLIENTE cliente;
     cout << "\n==========================================" << endl;
     cout <<"Persona (datos basicos)"<<endl;
     cout << "==========================================" << endl;
@@ -657,6 +699,7 @@ FECHACREACION obtenerFechaActual()
 void crearCuenta(vector<CLIENTE>& banco){
     string cedulaPersona;
     bool existeCuenta;
+    CUENTA cuenta;
     system("cls");  
     cout << "\n==========================================" << endl;
     cout << "Creando cuenta"<<endl;
@@ -669,7 +712,7 @@ void crearCuenta(vector<CLIENTE>& banco){
         cout << "La persona no se encuentra registrada."<<endl;
         getch();
     } else {
-        cout << "Digite el codigo de tipo de codigo cuenta: ";
+        cout << "Digite el codigo de tipo de cuenta: ";
         cin >> cuenta.codCuenta;
         existeCuenta = verificarTipoCuentaCliente(cliente.tipoCuentas, cuenta.codCuenta);
         if(!existeCuenta){
@@ -728,6 +771,8 @@ void crearCuenta(vector<CLIENTE>& banco){
 
 // Función para gestionar el estado de la cuenta
 void gestionarEstadoCuenta() {
+    TIPO_DE_CUENTA tipo_de_cuenta;
+    CUENTA cuenta;
     system("cls");  
     cout << "\n==========================================" << endl;
     cout << "Gestionar estado de cuenta" << endl;
@@ -776,6 +821,7 @@ void crearProducto(vector<CLIENTE>& banco)
 {
     string cedulaPersona;
     string numeroCuenta;
+    PRODUCTO producto;
     system("cls");
      cout << "\n==========================================" << endl;
     cout << "Asociando producto"<<endl;
@@ -1438,13 +1484,13 @@ void transferencia(vector<CLIENTE>& banco)
             system("cls");
             cout << "Transferencia exitosa." << endl;
             cout << "Cuenta de origen:" << endl;
-            cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido << endl;
+            cout << "Usuario: " << clienteOrigen.datosBasicos.nombre << " " << clienteOrigen.datosBasicos.apellido << endl;
             cout << "Cedula: " << clienteOrigen.datosBasicos.cedula << endl;
             cout << "Numero de producto: " << cuentaOrigen.numeroCuenta << endl;
             cout << "Saldo actualizado de la cuenta de origen: $" << cuentaOrigen.saldo << endl;
 
             cout << "Cuenta de destino:" << endl;
-            cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido << endl;
+            cout << "Usuario: " << clienteDestino.datosBasicos.nombre << " " << clienteDestino.datosBasicos.apellido << endl;
             cout << "Cedula: " << clienteDestino.datosBasicos.cedula << endl;
             cout << "Numero de producto: " << cuentaDestino.numeroCuenta << endl;
             cout << "Saldo actualizado de la cuenta de destino: $" << cuentaDestino.saldo << endl;
