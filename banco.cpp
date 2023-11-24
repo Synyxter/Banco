@@ -87,10 +87,8 @@ struct CUENTA
     PLAZO plazo;
     FECHACREACION fechaCreacion;
     CUENTA() : codCuenta("-1"), numeroCuenta(""),cupo(0), saldo(0), disponible(0) {}
+    
 };
-
-
-
 struct PRODUCTO
 {
     string cedula;
@@ -104,6 +102,15 @@ struct CLIENTE
     vector<TIPO_DE_CUENTA> tipoCuentas;
     vector<CUENTA> cuentas;
     vector<PRODUCTO> productos;
+    vector<TRANSACCIONES> transacciones;
+};
+
+struct TRANSACCIONES
+{
+
+string numeroCuentaOrigen;
+string numeroCuentaDestino;
+
 };
 
 
@@ -250,6 +257,7 @@ void guardarCuentas(vector<CLIENTE>& banco){
     }
 
 }
+        
 
 //Guarda los datos de las referencias de los productos en un archivo productos.txt
 void guardarProductos(vector<CLIENTE>& banco){
@@ -795,9 +803,8 @@ void crearCuenta(vector<CLIENTE>& banco){
 
     }
 }
-
 // Función para gestionar el estado de la cuenta
-void gestionarEstadoCuenta() {
+void gestionarEstadoCuenta(vector<CLIENTE>& banco) {
     TIPO_DE_CUENTA tipo_de_cuenta;
     CUENTA cuenta;
     system("cls");  
@@ -814,6 +821,7 @@ void gestionarEstadoCuenta() {
 
     switch (opcion) {
         case 1: // Cambiar a estado inactivo
+        cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
             if (tipo_de_cuenta.codigo == "101" || // Cuenta de Ahorros
                 tipo_de_cuenta.codigo == "102" || // Cuenta Corriente
                 tipo_de_cuenta.codigo == "105" || // Nequi
@@ -823,6 +831,7 @@ void gestionarEstadoCuenta() {
             }
             break;
         case 2: // Cambiar a estado bloqueado
+        cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
             if (tipo_de_cuenta.codigo == "103" || // Tarjeta de Crédito
                 tipo_de_cuenta.codigo == "104" || // Préstamo
                 tipo_de_cuenta.codigo == "107") { // CDT
@@ -831,6 +840,7 @@ void gestionarEstadoCuenta() {
             }
             break;
         case 3: // Embargar cuenta
+        cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
             if (tipo_de_cuenta.codigo != "104") { // No es Préstamo
                 // Restricción: Solo la cuenta de Préstamo no puede ser embargada
                 cuenta.estado.descripcion = "Embargada";
@@ -842,7 +852,6 @@ void gestionarEstadoCuenta() {
             break;
     }
 }
-
 // funcion para hacer la asociacion de cedula con numero de cuenta
 void crearProducto(vector<CLIENTE>& banco)
 {
@@ -1526,9 +1535,7 @@ void transferencia(vector<CLIENTE>& banco)
             getch();
             }
         }
-
     }
-
 }
 
 //BLOQUE DE FUNCIONES PARA CANCELAR CUENTA
@@ -1813,10 +1820,77 @@ void menuTransacciones(vector<CLIENTE>& banco)
     getch();
 }
 
+void clienteMayorTransacciones(vector<CLIENTE> banco, vector<TRANSACCIONES> transacciones){
 
-//banco y cedula
-//pedir datos
-//se pone mismas variables
+}
+
+void estadisticas(vector<CLIENTE> banco, vector<TRANSACCIONES> transacciones)
+{
+
+}
+
+
+void menuEstadisticas(vector<CLIENTE> banco, vector<TRANSACCIONES> transacciones)
+{
+    int opcion = -9; 
+  do {
+        system("cls");
+         cout << "Banco de la casita roja" << endl;
+        cout << "\n==========================================" << endl;
+        cout << "Estadisticas de los clientes" << endl;
+        cout << "Numero de clientes activos: " << banco.size() <<endl;
+        cout << "==========================================" << endl;
+        cout << endl;
+        cout << "¿Que opcion desea ver de las siguientes?" << endl;
+        cout << "Presione el numero de la opcion. " << endl;
+        cout << "1. Mostrar el cliente que más transacciones realizo.  " << endl;
+        cout << "2. Mostrar el promedio de todas las consignaciones realizadas " << endl;
+        cout << "3. Mostrar el promedio de todos los retiros realizados " << endl;
+        cout << "4. Mostrar el promedio de todas las transferencias realizadas " << endl;
+        cout << "5. Mostrar el total de cada una de las transacciones. " << endl;
+        cout << "6. Mostrar el cliente que menos transacciones realizo. " << endl;
+        cout << "7. Mostrar las cuentas con mayor saldo " << endl;
+        cout << "8. Mostrar las cuentas con menor saldo " << endl;
+        cout << "9. Mostrar las tarjetas de crédito con mayor cupo " << endl;
+        cout << "10. Mostrar las tarjetas de crédito con menor cupo " << endl;
+        cout << "11. Mostrar las cuentas corriente con más cupo sobregiro. " << endl;
+        cout << "12. Mostrar las cuentas corriente con menos cupo sobregiro. "<< endl;
+        cout << "13. Mostrar todas las estadisticas al tiempo. " << endl;
+        cout << "14. Salir. " << endl;
+        cout << endl;
+        cout << "Digite la opcion del menu: ";
+        cin >> opcion;
+
+        switch (opcion) 
+        {
+            case 1:
+                
+                break;
+            case 2:
+                
+                break;
+            case 3:
+                
+                break;
+            case 4:
+                
+                break;
+            case 5:
+                
+                break;
+            case 6:
+                
+                break;
+            case 7:
+            
+            default:
+                break;
+        }
+    } while (opcion != 0);
+
+    getch();
+
+}
 
 
 
@@ -1834,16 +1908,17 @@ int main()
         cout << "Numero de clientes activos: " << banco.size() <<endl;
         cout << "==========================================" << endl;
         cout << endl;
-        cout << "1. Crear un tipo de cuenta." << endl;
-        cout << "2. Crear persona (datos basicos)." << endl;
+        cout << "1. Crear persona (datos basicos)." << endl;
+        cout << "2. Crear un tipo de cuenta." << endl;
         cout << "3. Crear cuenta." << endl;
-        cout << "4. Producto" << endl;
-        cout << "5. Consultar Saldo" << endl;
-        cout << "6. Consultar Disponible" << endl;
-        cout << "7. Transacciones" << endl;
-        cout << "8. Actualizar" << endl;
-        cout << "9. Estadisticas" << endl;
-        cout << "10. Salir" << endl;
+        cout << "4. Cambiar estado de cuenta. " <<endl;
+        cout << "5. Producto" << endl;
+        cout << "6. Consultar Saldo" << endl;
+        cout << "7. Consultar Disponible" << endl;
+        cout << "8. Transacciones" << endl;
+        cout << "9. Actualizar" << endl;
+        cout << "10. Estadisticas" << endl;
+        cout << "11. Salir" << endl;
         cout << endl;
         cout << "Digite la opcion del menu: ";
         cin >> opcion;
@@ -1851,33 +1926,35 @@ int main()
         switch (opcion) 
         {
             case 1:
-                crearTipoCuenta(banco);
+                crearPersona(banco);
                 break;
             case 2:
-                crearPersona(banco);
+                crearTipoCuenta(banco);
                 break;
             case 3:
                 crearCuenta(banco);
                 break;
-            case 4:
-                crearProducto(banco);
+            case 4: 
+                gestionarEstadoCuenta(banco);
                 break;
             case 5:
-                consultarSaldo(banco);
+                crearProducto(banco);
                 break;
             case 6:
-                consultarDisponible(banco);
+                consultarSaldo(banco);
                 break;
             case 7:
-                menuTransacciones(banco);
+                consultarDisponible(banco);
                 break;
             case 8:
+                menuTransacciones(banco);
+                break;
+            case 9:
                 actualizarDatosPersona(banco);
                 break;
-
-            case 9:
-                break;    
             case 10:
+                break;    
+            case 11:
                 opcion = 0;
                 break;
             default:
