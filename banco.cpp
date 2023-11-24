@@ -797,10 +797,9 @@ void crearCuenta(vector<CLIENTE>& banco){
 
     }
 }
-// Función para gestionar el estado de la cuenta
-void gestionarEstadoCuenta(vector<CLIENTE>& banco) {
-    TIPO_DE_CUENTA tipo_de_cuenta;
-    CUENTA cuenta;
+
+//Función que cambia el estado de una cuenta
+void gestionarEstadoCuenta(vector<CLIENTE>& banco, char estado){
     string numeroCuenta;
     system("cls");
     cout << "Ingrese el numero de la cuenta: " << endl;
@@ -811,6 +810,48 @@ void gestionarEstadoCuenta(vector<CLIENTE>& banco) {
         cout << "El numero de cuenta no existe." << endl;
         getch();
     } else {
+        CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        switch (estado)
+        {
+        case 'I':
+            if (cuenta.codCuenta == "101" || // Cuenta de Ahorros
+                cuenta.codCuenta == "102" || // Cuenta Corriente
+                cuenta.codCuenta == "105" || // Nequi
+                cuenta.codCuenta == "106") { // Fiducuenta
+                cuenta.estado.cod = 'I';
+                cuenta.estado.descripcion = "Inactiva";
+                cout << "Estado de cuenta inactivado. " << endl;
+            }
+           
+            break;
+        case 'B':
+            if (cuenta.codCuenta == "103" || // Tarjeta de Crédito
+                cuenta.codCuenta == "104" || // Préstamo
+                cuenta.codCuenta == "107") { // CDT
+                cuenta.estado.cod = 'B';
+                cuenta.estado.descripcion = "Bloqueada";
+                cout << "Estado de cuenta bloqueado. " << endl;
+            }
+           
+            break;
+        case 'E':
+             if (cuenta.codCuenta != "104") { // No es Préstamo
+                // Restricción: Solo la cuenta de Préstamo no puede ser embargada
+                cuenta.estado.cod = 'E';
+                cuenta.estado.descripcion = "Embargada";
+                cout << "Estado de cuenta embargado. " << endl;
+            }
+            break;
+        default:
+            break;
+        }
+        getch();
+    }
+}
+
+// Función para gestionar el estado de la cuenta
+void menuEstadoCuenta(vector<CLIENTE>& banco) {
+        int opcion = 5;
         do{
             system("cls");  
             cout << "\n==========================================" << endl;
@@ -821,50 +862,25 @@ void gestionarEstadoCuenta(vector<CLIENTE>& banco) {
             cout << "3. Embargar cuenta" << endl;
             cout << "4. Volver al menu principal" << endl;
             cout << "Digite la opcion: ";
-            int opcion;
             cin >> opcion;
 
         switch (opcion) {
-        case 1: // Cambiar a estado inactivo
-        cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
-            if (tipo_de_cuenta.codigo == "101" || // Cuenta de Ahorros
-                tipo_de_cuenta.codigo == "102" || // Cuenta Corriente
-                tipo_de_cuenta.codigo == "105" || // Nequi
-                tipo_de_cuenta.codigo == "106") { // Fiducuenta
-                cuenta.estado.cod = 'I';
-                cuenta.estado.descripcion = "Inactiva";
-                cout << "Estado de cuenta inactivado. " << endl;
-                getch();
-            }
+            case 1: // Cambiar a estado inactivo
+                gestionarEstadoCuenta(banco, 'I');
                 break;
             case 2: // Cambiar a estado bloqueado
-            cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
-            if (tipo_de_cuenta.codigo == "103" || // Tarjeta de Crédito
-                tipo_de_cuenta.codigo == "104" || // Préstamo
-                tipo_de_cuenta.codigo == "107") { // CDT
-                cuenta.estado.cod = 'B';
-                cuenta.estado.descripcion = "Bloqueada";
-                cout << "Estado de cuenta bloqueado. " << endl;
-                getch();
-            }
+                gestionarEstadoCuenta(banco, 'B');
                 break;
             case 3: // Embargar cuenta
-            cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
-            if (tipo_de_cuenta.codigo != "104") { // No es Préstamo
-                // Restricción: Solo la cuenta de Préstamo no puede ser embargada
-                cuenta.estado.descripcion = "Embargada";
-                cout << "Estado de cuenta embargado. " << endl;
-                getch();
-            }
+                gestionarEstadoCuenta(banco, 'E');
                 break;
             case 4:
             opcion = 0;
                 break;
             default:
                 break;
-            }
-        }while (opcion !=0 );  
-    }   
+        }
+    }while (opcion !=0 );   
 }
 // funcion para hacer la asociacion de cedula con numero de cuenta
 void crearProducto(vector<CLIENTE>& banco)
@@ -2054,7 +2070,7 @@ int main()
                 crearCuenta(banco);
                 break;
             case 4: 
-                gestionarEstadoCuenta(banco);
+                menuEstadoCuenta(banco);
                 break;
             case 5:
                 crearProducto(banco);
