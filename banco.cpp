@@ -95,14 +95,9 @@ struct PRODUCTO
     string numeroCuenta;
     PRODUCTO() : cedula("-1"), numeroCuenta("-1") {}
 };
-struct TRANSACCIONES
+struct TRANSACCION
 {
-int montoAbono;
-int montoRetiro;
-string numeroCuentaOrigen;
-string numeroCuentaDestino;
 string tipo_de_transaccion;
-
 };
 struct CLIENTE
 {
@@ -110,7 +105,7 @@ struct CLIENTE
     vector<TIPO_DE_CUENTA> tipoCuentas;
     vector<CUENTA> cuentas;
     vector<PRODUCTO> productos;
-    vector<TRANSACCIONES> transacciones;
+    vector<TRANSACCION> transacciones;
 };
 
 //Inicio del programa
@@ -988,7 +983,8 @@ void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
         getch();
     } 
     else 
-    {
+    {   
+        TRANSACCION transaccion; 
         CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         int saldoAnterior = cuenta.saldo;
         cout << "Ingrese el monto a abonar: ";
@@ -1024,8 +1020,10 @@ void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
         else if (cuenta.estado.descripcion == "Bloqueada" ||
                 cuenta.estado.descripcion == "Eliminada") 
         {
-            cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
+         cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
         }
+        transaccion.tipo_de_transaccion = "Abono";
+        cliente.transacciones.push_back(transaccion);
         system("cls");
                     cout << "Abono exitoso."<< endl;
                     cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
@@ -1053,7 +1051,7 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else {
-
+        TRANSACCION transaccion;
         CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         cout << "Ingrese el monto a abonar: ";
         cin >> montoAbono;
@@ -1086,7 +1084,10 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
                             // Actualizar solo el saldo
                            cuenta.saldo += montoAbono;
                         }
+
                     }
+                    transaccion.tipo_de_transaccion = "Abono";
+                    cliente.transacciones.push_back(transaccion);
                     system("cls");
                     cout << "Abono exitoso."<< endl;
                     cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
@@ -1112,6 +1113,7 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
         {
             cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
         }
+
         getch();
     }
 }
@@ -1129,7 +1131,8 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else
-     {
+     {  
+        TRANSACCION transaccion;
         CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         int saldoAnterior = cuenta.saldo;
         cout << "Ingrese el monto a abonar: ";
@@ -1153,6 +1156,9 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
                     // y se aumenta el disponible más no el cupo. 
                     cuenta.saldo -= montoAbono;
                     cuenta.disponible += montoAbono;
+
+                    transaccion.tipo_de_transaccion = "Abono";
+                    cliente.transacciones.push_back(transaccion);
                     system("cls");
                     cout << "Abono exitoso."<< endl;
                     cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
@@ -1185,6 +1191,7 @@ void consignarPrestamo(vector<CLIENTE>& banco)
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else {
+        TRANSACCION transaccion;
         CUENTA& cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         int saldoAnterior = cuenta.saldo;
         cout << "Ingrese el monto a abonar: ";
@@ -1201,7 +1208,9 @@ void consignarPrestamo(vector<CLIENTE>& banco)
             }
         
         }
-        system("cls");
+                    transaccion.tipo_de_transaccion = "Abono";
+                    cliente.transacciones.push_back(transaccion);
+                    system("cls");
                     cout << "Abono exitoso."<< endl;
                     cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
                     cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
@@ -1305,7 +1314,7 @@ void retiroCuentasTipoAhorro(vector<CLIENTE>& banco)
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     }else {
-
+        TRANSACCION transaccion;
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         int saldoAnterior= cuenta.saldo;
         cout << "Ingrese el valor  a retirar :" << endl;
@@ -1327,8 +1336,10 @@ void retiroCuentasTipoAhorro(vector<CLIENTE>& banco)
             cout << "Error: El monto a retirar es mayor que el saldo o disponible." << endl;
             }
         }
-        system("cls");
-                    cout << "Abono exitoso."<< endl;
+                    transaccion.tipo_de_transaccion = "Retiro";
+                    cliente.transacciones.push_back(transaccion);
+                    system("cls");
+                    cout << "Retiro exitoso."<< endl;
                     cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
                     cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
                     cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
@@ -1353,6 +1364,7 @@ void realizarRetiroCuentaCorriente(vector<CLIENTE>& banco)
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else {
+        TRANSACCION transaccion;
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         int saldoAnterior= cuenta.saldo;
         cout << "Ingrese el valor a retirar: " << endl;
@@ -1395,9 +1407,10 @@ void realizarRetiroCuentaCorriente(vector<CLIENTE>& banco)
                 cuenta.disponible = cuenta.cupo + cuenta.saldo;
                 cout << "Retiro exitoso. Nuevo saldo: " << cuenta.saldo << ", Nuevo disponible: " << cuenta.disponible << endl;
             }
-
+            transaccion.tipo_de_transaccion = "Retiro";
+            cliente.transacciones.push_back(transaccion);
             system("cls");
-            cout << "Abono exitoso."<< endl;
+            cout << "Retiro exitoso."<< endl;
             cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido << endl;
             cout << "Cedula: " << cliente.datosBasicos.cedula << endl;
             cout << "Numero de producto: " << cuenta.numeroCuenta << endl;
@@ -1423,7 +1436,6 @@ void realizarRetiroCuentaCorriente(vector<CLIENTE>& banco)
     }
 }
 
-
 //Funcion para hacer retiro de tarjeta de credito
 void retiroTarjetaDeCredito(vector<CLIENTE>& banco) 
 {
@@ -1436,6 +1448,7 @@ void retiroTarjetaDeCredito(vector<CLIENTE>& banco)
         cout << "El numero de cuenta no existe."<<endl;
         getch();
     } else {
+        TRANSACCION transaccion;
         CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
         int saldoAnterior= cuenta.saldo;
         cout << "Ingrese el valor  a retirar :" << endl;
@@ -1450,9 +1463,11 @@ void retiroTarjetaDeCredito(vector<CLIENTE>& banco)
         cuenta.saldo += valorRetiro;
         cuenta.disponible -= valorRetiro;
 
+        transaccion.tipo_de_transaccion = "Retiro";
+        cliente.transacciones.push_back(transaccion);
         // SALIDA
         system("cls");
-                    cout << "Abono exitoso."<< endl;
+                    cout << "Retiro exitoso."<< endl;
                     cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
                     cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
                     cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
@@ -1487,6 +1502,7 @@ void transferencia(vector<CLIENTE>& banco)
             cout << "El numero de cuenta no existe."<<endl;
             getch();
         } else {
+            TRANSACCION transaccion;
             CUENTA& cuentaOrigen = obtenerCuenta(clienteOrigen.cuentas, numeroCuentaOrigen);
             CUENTA& cuentaDestino = obtenerCuenta(clienteDestino.cuentas, numeroCuentaDestino);
             // Solicitar el monto a transferir
@@ -1515,6 +1531,9 @@ void transferencia(vector<CLIENTE>& banco)
                 // Realizar la transferencia
                cuentaOrigen.saldo -= montoTransferencia;
                cuentaDestino.saldo  += montoTransferencia;
+
+            transaccion.tipo_de_transaccion = "Transferencia";
+            clienteOrigen.transacciones.push_back(transaccion);   
          
             system("cls");
             cout << "Transferencia exitosa." << endl;
@@ -1818,17 +1837,88 @@ void menuTransacciones(vector<CLIENTE>& banco)
     getch();
 }
 
-void clienteMayorTransacciones(vector<CLIENTE>& banco)
+// Funciones de estadisticas
+void ObtenerClienteMayorTransacciones(vector<CLIENTE>& banco)
 {
- 
+    int numTransaccionesMayor = 0;
+    CLIENTE clienteMayor;       
+    for(CLIENTE cliente : banco)
+    {
+        if(cliente.transacciones.size() > numTransaccionesMayor) //compara el numero de transacciones del cliente
+        {
+            clienteMayor = cliente;
+            numTransaccionesMayor = cliente.transacciones.size();
+        } 
+    }
+    system ("cls");
+    cout << "Cliente con mayor numero de transacciones " << endl;
+    cout << "__________________________________________" << endl;
+    cout << "Nombre: " <<clienteMayor.datosBasicos.nombre << endl;
+    cout << "Apellido: " <<clienteMayor.datosBasicos.apellido << endl;
+    cout << "Cedula: " <<clienteMayor.datosBasicos.cedula << endl;
+    cout << "Numero de transacciones que llevo a cabo: " << numTransaccionesMayor << endl;
+    getch();
+}
+
+
+void ObtenerClienteMenorTransacciones(vector<CLIENTE>& banco)
+{
+    int numTransaccionesMenor = 999;
+    CLIENTE clienteMenor;       
+    for(CLIENTE cliente : banco)
+    {
+        if(cliente.transacciones.size()<numTransaccionesMenor) //compara el numero de transacciones del cliente
+        {
+            clienteMenor = cliente;
+            numTransaccionesMenor = cliente.transacciones.size();
+        }
+    
+    }
+    system ("cls");
+    cout << "Cliente con menor numero de transacciones " << endl;
+    cout << "__________________________________________" << endl;
+    cout << "Nombre: " <<clienteMenor.datosBasicos.nombre << endl;
+    cout << "Apellido: " <<clienteMenor.datosBasicos.apellido << endl;
+    cout << "Cedula: " <<clienteMenor.datosBasicos.cedula << endl;
+    cout << "Numero de transacciones que llevo a cabo: " << numTransaccionesMenor << endl;
+    getch();
+}
+
+void obtenerTotalTipoDeTransacciones(vector<CLIENTE> banco)
+{
+    int contadorAbono = 0;
+    int contadorRetiro = 0;
+    int contadorTrasferencia = 0;
+
+    for(CLIENTE cliente : banco)
+    {
+        for(TRANSACCION transaccion : cliente.transacciones)
+        {
+            if(transaccion.tipo_de_transaccion == "Abono")
+            {
+                contadorAbono++;
+            } else if(transaccion.tipo_de_transaccion == "Retiro"){
+                contadorRetiro++;
+            } else if(transaccion.tipo_de_transaccion == "Transferencia"){
+                contadorTrasferencia++;
+            }
+        }
+    }
+        system ("cls");
+    cout << "Total de transacciones " << endl;
+    cout << "__________________________________________" << endl;
+    cout << "Consignaciones: " <<contadorAbono << endl;
+    cout << "Retiros: " <<contadorRetiro << endl;
+    cout << "Transferencias: " <<contadorTrasferencia << endl;
+    getch();
 
 }
 
-void estadisticas(vector<CLIENTE> banco)
-{
+// void estadisticas(vector<CLIENTE> banco)
+// {
 
-}
 
+// }
 
 void menuEstadisticas(vector<CLIENTE> banco)
 {
@@ -1864,25 +1954,37 @@ void menuEstadisticas(vector<CLIENTE> banco)
         switch (opcion) 
         {
             case 1:
-                
+                ObtenerClienteMayorTransacciones(banco);
                 break;
             case 2:
-                
                 break;
             case 3:
-                
                 break;
             case 4:
-                
                 break;
             case 5:
-                
+                obtenerTotalTipoDeTransacciones(banco);
                 break;
             case 6:
-                
+                ObtenerClienteMenorTransacciones(banco);
                 break;
             case 7:
-            
+                break;
+            case 8: 
+                break;
+            case 9:
+                break;
+            case 10:
+                break;
+            case 11:
+                break;
+            case 12:
+                break;
+            case 13:
+                break;
+            case 14:
+                opcion= 0;
+                break;
             default:
                 break;
         }
@@ -1953,6 +2055,7 @@ int main()
                 actualizarDatosPersona(banco);
                 break;
             case 10:
+                menuEstadisticas(banco);
                 break;    
             case 11:
                 opcion = 0;
