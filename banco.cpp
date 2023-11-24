@@ -801,19 +801,30 @@ void crearCuenta(vector<CLIENTE>& banco){
 void gestionarEstadoCuenta(vector<CLIENTE>& banco) {
     TIPO_DE_CUENTA tipo_de_cuenta;
     CUENTA cuenta;
-    system("cls");  
-    cout << "\n==========================================" << endl;
-    cout << "Gestionar estado de cuenta" << endl;
-    cout << "==========================================" << endl;
-    cout << "1. Cambiar a estado inactivo" << endl;
-    cout << "2. Cambiar a estado bloqueado" << endl;
-    cout << "3. Embargar cuenta" << endl;
-    cout << "4. Volver al menú principal" << endl;
-    cout << "Digite la opción: ";
-    int opcion;
-    cin >> opcion;
+    string numeroCuenta;
+    system("cls");
+    cout << "Ingrese el numero de la cuenta: " << endl;
+    cin >> numeroCuenta;
+    CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
+    if(cliente.datosBasicos.cedula == "")
+    {
+        cout << "El numero de cuenta no existe." << endl;
+        getch();
+    } else {
+        do{
+            system("cls");  
+            cout << "\n==========================================" << endl;
+            cout << "Gestionar estado de cuenta" << endl;
+            cout << "==========================================" << endl;
+            cout << "1. Cambiar a estado inactivo" << endl;
+            cout << "2. Cambiar a estado bloqueado" << endl;
+            cout << "3. Embargar cuenta" << endl;
+            cout << "4. Volver al menu principal" << endl;
+            cout << "Digite la opcion: ";
+            int opcion;
+            cin >> opcion;
 
-    switch (opcion) {
+        switch (opcion) {
         case 1: // Cambiar a estado inactivo
         cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
             if (tipo_de_cuenta.codigo == "101" || // Cuenta de Ahorros
@@ -822,29 +833,38 @@ void gestionarEstadoCuenta(vector<CLIENTE>& banco) {
                 tipo_de_cuenta.codigo == "106") { // Fiducuenta
                 cuenta.estado.cod = 'I';
                 cuenta.estado.descripcion = "Inactiva";
+                cout << "Estado de cuenta inactivado. " << endl;
+                getch();
             }
-            break;
-        case 2: // Cambiar a estado bloqueado
-        cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
+                break;
+            case 2: // Cambiar a estado bloqueado
+            cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
             if (tipo_de_cuenta.codigo == "103" || // Tarjeta de Crédito
                 tipo_de_cuenta.codigo == "104" || // Préstamo
                 tipo_de_cuenta.codigo == "107") { // CDT
                 cuenta.estado.cod = 'B';
                 cuenta.estado.descripcion = "Bloqueada";
+                cout << "Estado de cuenta bloqueado. " << endl;
+                getch();
             }
-            break;
-        case 3: // Embargar cuenta
-        cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
+                break;
+            case 3: // Embargar cuenta
+            cout << "Digite el numero de cuenta :" <<cuenta.numeroCuenta;
             if (tipo_de_cuenta.codigo != "104") { // No es Préstamo
                 // Restricción: Solo la cuenta de Préstamo no puede ser embargada
                 cuenta.estado.descripcion = "Embargada";
+                cout << "Estado de cuenta embargado. " << endl;
+                getch();
             }
-            break;
-        case 4: // Volver al menú principal
-            break;
-        default:
-            break;
-    }
+                break;
+            case 4:
+            opcion = 0;
+                break;
+            default:
+                break;
+            }
+        }while (opcion !=0 );  
+    }   
 }
 // funcion para hacer la asociacion de cedula con numero de cuenta
 void crearProducto(vector<CLIENTE>& banco)
@@ -971,12 +991,9 @@ void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
     system ("cls");
     float montoAbono;
     string numeroCuenta;
-    
     cout << "Ingrese el numero de la cuenta: " << endl;
     cin >> numeroCuenta;
-
     CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
-
     if(cliente.datosBasicos.cedula == "")
     {
         cout << "El numero de cuenta no existe." << endl;
@@ -1121,7 +1138,8 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
 
 // funcion que controla la consignacion en tarjetas de credito
 void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
-{   
+{    
+    system("cls");
     float montoAbono;
     string numeroCuenta;
     cout << "Ingrese el numero de la cuenta: " <<endl;
@@ -1175,7 +1193,6 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
                 }
             }
         }
-
         getch();
     }
 }
