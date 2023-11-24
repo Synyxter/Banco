@@ -420,7 +420,7 @@ void cargarCuentas(vector<CLIENTE>& banco){
 }
 
 void cargarTipoCuentas(vector<CLIENTE>& banco){
-    ifstream archivoTipoCuentas("productos.txt");
+    ifstream archivoTipoCuentas("tipoCuentas.txt");
 
     if (archivoTipoCuentas.is_open()) {
         string linea;
