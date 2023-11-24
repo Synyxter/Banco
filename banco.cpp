@@ -410,9 +410,9 @@ void actualizarDatosPersona(vector<CLIENTE>& banco)
 {
     system("cls");
     string cedulaPersona;
-    CLIENTE& cliente = obtenerCliente(banco, cedulaPersona);
     cout << "Digite la cedula de la cuenta que desea actualizar: " << endl;
     cin>>cedulaPersona;
+    CLIENTE& cliente = obtenerCliente(banco, cedulaPersona);
     if(cliente.datosBasicos.cedula == ""){
         cout << "La persona no se encuentra registrada."<<endl;
         getch();
@@ -425,8 +425,6 @@ void actualizarDatosPersona(vector<CLIENTE>& banco)
         cin >> cliente.datosBasicos.nombre;
         cout << "Actualizar el apellido: ";
         cin >> cliente.datosBasicos.apellido;
-        cout << "Actualizar la cedula: ";
-        cin >> cliente.datosBasicos.cedula;
         cout << "Actualizar la fecha de nacimiento (DD MM AAAA): " <<endl;
         cin >> cliente.datosBasicos.fechaNacimiento.dia;
         cin >> cliente.datosBasicos.fechaNacimiento.mes;
@@ -442,8 +440,6 @@ void actualizarDatosPersona(vector<CLIENTE>& banco)
         cin >> cliente.datosBasicos.estatura;
         cout << "Actualizar el telefono: ";
         cin >> cliente.datosBasicos.telefono;
-        //inserta el cliente
-        banco.push_back(cliente);
         getch();   
     }
 }
@@ -1609,6 +1605,7 @@ int main()
                 menuTransacciones(banco);
                 break;
             case 8:
+                actualizarDatosPersona(banco);
                 break;
 
             case 9:
