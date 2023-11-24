@@ -12,7 +12,6 @@ permite la inserción y la extracción
 desde y a strings de la misma manera que 
 podríamos hacer con cin y cout.
 */
-// comentario prueba commit para ver si funciona clave ssh
 using namespace std;
 
 // Definición de las estructuras de datos
@@ -112,42 +111,75 @@ CUENTA cuenta;
 TIPO_DE_CUENTA tipo_de_cuenta;
 PRODUCTO producto;
 
-void guardarPersonas(vector<CLIENTE>& banco){
-    ofstream archivo("personas.txt", ios::app);
+//
+void limpiarArchivoPersonas(){
+    ofstream archivoPe("personas.txt", ios::trunc);
 
-    if (archivo.is_open()) {
-        // El archivo se abrió correctamente
+    if (!archivoPe.is_open()) {
+        std::cout << "No se pudo abrir el archivo." << std::endl;
+    }
+
+    archivoPe.close();
+}
+
+void limpiarArchivoCuentas(){
+    ofstream archivoCu("cuentas.txt", ios::trunc);
+
+    if (!archivoCu.is_open()) {
+        std::cout << "No se pudo abrir el archivo." << std::endl;
+    }
+
+    archivoCu.close();
+}
+
+void limpiarArchivoProductos(){
+    ofstream archivoPro("productos.txt", ios::trunc);
+
+    if (!archivoPro.is_open()) {
+        std::cout << "No se pudo abrir el archivo." << std::endl;
+    }
+
+    archivoPro.close();
+}
+
+//Guarda los datos de las personas en un archivo personas.txt
+void guardarPersonas(vector<CLIENTE>& banco){
+    ofstream archivoPersonas("personas.txt", ios::app);
+
+    if (archivoPersonas.is_open()) {
+        // El Personas se abrió correctamente
         // Realiza operaciones de escritura en el archivo
         for(CLIENTE cliente : banco){
-            archivo << cliente.datosBasicos.nombre;
-            archivo << ";";
-            archivo << cliente.datosBasicos.apellido;
-            archivo << ";";
-            archivo << cliente.datosBasicos.cedula;
-            archivo << ";";
-            archivo << cliente.datosBasicos.fechaNacimiento.dia;
-            archivo << ";";
-            archivo << cliente.datosBasicos.fechaNacimiento.mes;
-            archivo << ";";
-            archivo << cliente.datosBasicos.fechaNacimiento.anio;
-            archivo << ";";
-            archivo << cliente.datosBasicos.edad;
-            archivo << ";";
-            archivo << cliente.datosBasicos.correoElectronico;
-            archivo << ";";
-            archivo << cliente.datosBasicos.sexo;
-            archivo << ";";
-            archivo << cliente.datosBasicos.estatura;
-            archivo << ";";
-            archivo << cliente.datosBasicos.telefono<<endl;
+            archivoPersonas << cliente.datosBasicos.nombre;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.apellido;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.cedula;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.fechaNacimiento.dia;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.fechaNacimiento.mes;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.fechaNacimiento.anio;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.edad;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.correoElectronico;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.sexo;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.estatura;
+            archivoPersonas << ";";
+            archivoPersonas << cliente.datosBasicos.telefono<<endl;
         }
-        archivo.close(); // Cierra el archivo cuando hayas terminado
+        archivoPersonas.close(); // Cierra el archivo cuando hayas terminado
     } else {
         cout << "No se pudo abrir el archivo." << endl;
     }
 
 }
 
+//Guarda los datos de las cuentas en un archivo cuentas.txt
 void guardarCuentas(vector<CLIENTE>& banco){
     ofstream archivoCuentas("cuentas.txt", ios::app);
 
@@ -191,6 +223,7 @@ void guardarCuentas(vector<CLIENTE>& banco){
 
 }
 
+//Guarda los datos de las referencias de los productos en un archivo productos.txt
 void guardarProductos(vector<CLIENTE>& banco){
     ofstream archivoProductos("productos.txt", ios::app);
 
@@ -212,35 +245,194 @@ void guardarProductos(vector<CLIENTE>& banco){
 
 }
 
-void verPersonasRegistradas(){
-     ifstream archivo("personas.txt");
+// void verPersonasRegistradas(){
+//      ifstream archivo("personas.txt");
 
-    if (archivo.is_open()) {
+//     if (archivo.is_open()) {
+//         string linea;
+//         while (getline(archivo, linea)) {
+//             // Realiza operaciones de procesamiento en cada línea leída
+//             istringstream ss(linea);
+//             string dato;
+        
+//             while (getline(ss, dato, ';')) {
+//                 cout << dato << " ";
+//             }
+
+//             cout << endl;
+//         }
+
+//         archivo.close(); // Cierra el archivo cuando hayas terminado de leer
+//     } else {
+//         std::cout << "No se pudo abrir el archivo." << std::endl;
+//     }
+
+// }
+
+// Esta funcion invoca las funcionas para guardar los datos en los archivos
+void guardarDatos(vector<CLIENTE>& banco){
+    limpiarArchivoPersonas();
+    guardarPersonas(banco);
+    limpiarArchivoCuentas();
+    guardarCuentas(banco);
+    limpiarArchivoProductos();
+    guardarProductos(banco);
+}
+
+//Carga los datos de las personas que estan almacenados en el archivo personas.txt
+void cargarPersonas(vector<CLIENTE>& banco){
+     ifstream archivoPersonas("personas.txt");
+
+    if (archivoPersonas.is_open()) {
         string linea;
-        while (getline(archivo, linea)) {
+        while (getline(archivoPersonas, linea)) {
+             int contador=1;
+             CLIENTE cliente;
             // Realiza operaciones de procesamiento en cada línea leída
             istringstream ss(linea);
-            string token;
+            string dato;
         
-            while (getline(ss, token, ';')) {
-                cout << token << " ";
+            while (getline(ss, dato, ';')){
+                if(contador == 1){
+                    cliente.datosBasicos.nombre = dato;
+                } else if(contador == 2){
+                    cliente.datosBasicos.apellido = dato;
+                } else if(contador == 3){
+                    cliente.datosBasicos.cedula = dato;
+                } else if(contador == 4){
+                    cliente.datosBasicos.fechaNacimiento.dia = stoi(dato);
+                } else if(contador == 5){
+                    cliente.datosBasicos.fechaNacimiento.mes = stoi(dato);
+                } else if(contador == 6){
+                    cliente.datosBasicos.fechaNacimiento.anio = stoi(dato);
+                } else if(contador == 7){
+                    cliente.datosBasicos.edad = stoi(dato);
+                } else if(contador == 8){
+                    cliente.datosBasicos.correoElectronico = dato;
+                } else if(contador == 9){
+                    cliente.datosBasicos.sexo = dato[0];
+                } else if(contador == 10){
+                    cliente.datosBasicos.estatura = stof(dato);
+                } else if(contador == 10){
+                    cliente.datosBasicos.telefono = dato;
+                }
+                contador++;
             }
 
-            cout << endl;
+           banco.push_back(cliente);
         }
 
-        archivo.close(); // Cierra el archivo cuando hayas terminado de leer
+        archivoPersonas.close(); // Cierra el archivo cuando hayas terminado de leer
     } else {
         std::cout << "No se pudo abrir el archivo." << std::endl;
     }
 
 }
 
-void guardarDatos(vector<CLIENTE>& banco){
-    guardarPersonas(banco);
-    guardarCuentas(banco);
-    guardarProductos(banco);
+//Carga los datos de las cuentas que estan almacenados en el archivo cuentas.txt
+void cargarCuentas(vector<CLIENTE>& banco){
+     ifstream archivoCuentas("cuentas.txt");
+
+    if (archivoCuentas.is_open()) {
+        string linea;
+        while (getline(archivoCuentas, linea)) {
+             int contador=1;
+             CUENTA cuenta;
+            // Realiza operaciones de procesamiento en cada línea leída
+            istringstream ss(linea);
+            string dato;
+        
+            while (getline(ss, dato, ';')){
+                if(contador == 1){
+                   cuenta.codCuenta = dato;
+                } else if(contador == 2){
+                    cuenta.numeroCuenta = dato;
+                } else if(contador == 3){
+                    cuenta.cupo = stoi(dato);
+                } else if(contador == 4){
+                    cuenta.saldo = stoi(dato);
+                } else if(contador == 5){
+                    cuenta.disponible = stoi(dato);
+                } else if(contador == 6){
+                    cuenta.estado.cod = dato[0];
+                } else if(contador == 7){
+                    cuenta.estado.descripcion = dato;
+                } else if(contador == 8){
+                    cuenta.plazo.dia_plazo = stoi(dato);
+                } else if(contador == 9){
+                    cuenta.plazo.mes_plazo = stoi(dato);
+                } else if(contador == 10){
+                    cuenta.plazo.anio_plazo = stoi(dato);
+                } else if(contador == 11){
+                    cuenta.fechaCreacion.dia_creacion_cuenta = stoi(dato);
+                } else if(contador == 12){
+                    cuenta.fechaCreacion.mes_creacion_cuenta = stoi(dato);
+                } else if(contador == 13){
+                    cuenta.fechaCreacion.anio_creacion_cuenta = stoi(dato);
+                }
+                contador++;
+            }
+            for(CLIENTE cliente : banco){
+                for(PRODUCTO producto : cliente.productos){
+                    if(producto.numeroCuenta == cuenta.numeroCuenta){
+                        cliente.cuentas.push_back(cuenta);
+                        break;
+                    }
+                }
+            }
+        }
+
+        archivoCuentas.close(); // Cierra el archivo cuando hayas terminado de leer
+    } else {
+        std::cout << "No se pudo abrir el archivo." << std::endl;
+    }
+
 }
+
+//Carga los datos de los productos que estan almacenados en el archivo productos.txt
+void cargarProductos(vector<CLIENTE>& banco){
+     ifstream archivoProductos("productos.txt");
+
+    if (archivoProductos.is_open()) {
+        string linea;
+        while (getline(archivoProductos, linea)) {
+             int contador=1;
+             PRODUCTO producto;
+            // Realiza operaciones de procesamiento en cada línea leída
+            istringstream ss(linea);
+            string dato;
+        
+            while (getline(ss, dato, ';')){
+                if(contador == 1){
+                   producto.cedula = dato;
+                } else if(contador == 2){
+                    producto.numeroCuenta = dato;
+                } 
+                contador++;
+            }
+            for(CLIENTE cliente : banco){
+                if(cliente.datosBasicos.cedula == producto.cedula){
+                    cliente.productos.push_back(producto);
+                    break;
+                }
+            }
+        }
+
+        archivoProductos.close(); // Cierra el archivo cuando hayas terminado de leer
+    } else {
+        std::cout << "No se pudo abrir el archivo." << std::endl;
+    }
+
+}
+
+// Esta función invoca las funcionaes que cargan los datos de los archivos
+void cargarDatos(vector<CLIENTE>& banco){
+    cargarPersonas(banco);
+    cargarProductos(banco);
+    cargarCuentas(banco);
+}
+
+
 
 
 //Verifica si un cliente tiene un tipo de cuenta en especifico
@@ -1560,11 +1752,13 @@ int main()
 	// Arreglo de CLIENTE para almacenar múltiples clientes
     vector<CLIENTE> banco; 
     int opcion = -9; //se inicializa en 9 para que el programa entre al bucle
+    cargarDatos(banco);
   do {
         system("cls");
         cout << "\n==========================================" << endl;
         cout << "Menu" << endl;
         cout << "Banco de la casita roja" << endl;
+        cout << "Numero de clientes activos: " << banco.size() <<endl;
         cout << "==========================================" << endl;
         cout << endl;
         cout << "1. Crear un tipo de cuenta." << endl;
