@@ -95,7 +95,15 @@ struct PRODUCTO
     string numeroCuenta;
     PRODUCTO() : cedula("-1"), numeroCuenta("-1") {}
 };
+struct TRANSACCIONES
+{
+int montoAbono;
+int montoRetiro;
+string numeroCuentaOrigen;
+string numeroCuentaDestino;
+string tipo_de_transaccion;
 
+};
 struct CLIENTE
 {
     DATOS_BASICOS datosBasicos;
@@ -105,17 +113,7 @@ struct CLIENTE
     vector<TRANSACCIONES> transacciones;
 };
 
-struct TRANSACCIONES
-{
-int montoAbono;
-int montoRetiro;
-string numeroCuentaOrigen;
-string numeroCuentaDestino;
-
-};
-
-
-//
+//Inicio del programa
 void limpiarArchivoPersonas(){
     ofstream archivoPe("personas.txt", ios::trunc);
 
@@ -1726,9 +1724,8 @@ void menuTransacciones(vector<CLIENTE>& banco)
                             break;
 
                         case 107:
-                            cout << "que mas pues mijo";
-                            getch();
                             // consignarCdt(banco);
+                            getch();
                             break;
 
                         case 108:
@@ -1821,19 +1818,19 @@ void menuTransacciones(vector<CLIENTE>& banco)
     getch();
 }
 
-void clienteMayorTransacciones(vector<CLIENTE>& banco, vector<TRANSACCIONES>& transacciones)
+void clienteMayorTransacciones(vector<CLIENTE>& banco)
 {
-
+ 
 
 }
 
-void estadisticas(vector<CLIENTE> banco, vector<TRANSACCIONES> transacciones)
+void estadisticas(vector<CLIENTE> banco)
 {
 
 }
 
 
-void menuEstadisticas(vector<CLIENTE> banco, vector<TRANSACCIONES> transacciones)
+void menuEstadisticas(vector<CLIENTE> banco)
 {
     int opcion = -9; 
   do {
@@ -1845,7 +1842,7 @@ void menuEstadisticas(vector<CLIENTE> banco, vector<TRANSACCIONES> transacciones
         cout << "==========================================" << endl;
         cout << endl;
         cout << "¿Que opcion desea ver de las siguientes?" << endl;
-        cout << "Presione el numero de la opcion. " << endl;
+        cout <<  "Presione el numero de la opcion. " << endl;
         cout << "1. Mostrar el cliente que más transacciones realizo.  " << endl;
         cout << "2. Mostrar el promedio de todas las consignaciones realizadas " << endl;
         cout << "3. Mostrar el promedio de todos los retiros realizados " << endl;
