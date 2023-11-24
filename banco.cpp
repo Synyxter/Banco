@@ -138,6 +138,16 @@ void limpiarArchivoProductos(){
     archivoPro.close();
 }
 
+void limpiarTipoCuentas(){
+    ofstream archivoTi("tipoCuentas.txt", ios::trunc);
+
+    if (!archivoTi.is_open()) {
+        std::cout << "No se pudo abrir el archivo." << std::endl;
+    }
+
+    archivoTi.close();
+}
+
 //Guarda los datos de las personas en un archivo personas.txt
 void guardarPersonas(vector<CLIENTE>& banco){
     ofstream archivoPersonas("personas.txt", ios::app);
@@ -169,6 +179,28 @@ void guardarPersonas(vector<CLIENTE>& banco){
             archivoPersonas << cliente.datosBasicos.telefono<<endl;
         }
         archivoPersonas.close(); // Cierra el archivo cuando hayas terminado
+    } else {
+        cout << "No se pudo abrir el archivo." << endl;
+    }
+
+}
+
+void guardarTipoCuentas(vector<CLIENTE>& banco){
+    ofstream archivoTipoCuentas("tipoCuentas.txt", ios::app);
+
+    if (archivoTipoCuentas.is_open()) {
+        //for que recorre los clientes
+        for(CLIENTE cliente : banco){
+            // for que recorre los tipos de cuentas del cliente
+            for(TIPO_DE_CUENTA tipo_de_cuenta : cliente.tipoCuentas)
+            {   archivoTipoCuentas << cliente.datosBasicos.cedula;
+                archivoTipoCuentas << ";";
+                archivoTipoCuentas << tipo_de_cuenta.codigo;
+                archivoTipoCuentas << ";";
+                archivoTipoCuentas << tipo_de_cuenta.descripcion<<endl;
+            }
+        }
+        archivoTipoCuentas.close(); // Cierra el archivo cuando hayas terminado
     } else {
         cout << "No se pudo abrir el archivo." << endl;
     }
@@ -269,6 +301,8 @@ void guardarProductos(vector<CLIENTE>& banco){
 void guardarDatos(vector<CLIENTE>& banco){
     limpiarArchivoPersonas();
     guardarPersonas(banco);
+    limpiarTipoCuentas();
+    guardarTipoCuentas(banco);
     limpiarArchivoCuentas();
     guardarCuentas(banco);
     limpiarArchivoProductos();
@@ -386,51 +420,45 @@ void cargarCuentas(vector<CLIENTE>& banco){
 }
 
 void cargarTipoCuentas(vector<CLIENTE>& banco){
-    TIPO_DE_CUENTA tipo_de_cuenta;
-     for(CLIENTE cliente : banco){
-        for(CUENTA cuenta : cliente.cuentas){
-            int codigo = stoi(cuenta.codCuenta);
-            switch (codigo) {
-            case 101:
-                tipo_de_cuenta.codigo = cuenta.codCuenta;
-                tipo_de_cuenta.descripcion = "Ahorros";
-                break;
-            case 102:
-                tipo_de_cuenta.codigo = cuenta.codCuenta;
-                tipo_de_cuenta.descripcion = "Corriente";
-                break;
-            case 103:
-                tipo_de_cuenta.codigo = cuenta.codCuenta;
-                tipo_de_cuenta.descripcion = "Tarjeta de credito";
-                break;
-            case 104:
-                tipo_de_cuenta.codigo = cuenta.codCuenta;
-                tipo_de_cuenta.descripcion = "Prestamo";
-                break;
-            case 105:
-                tipo_de_cuenta.codigo = cuenta.codCuenta;
-                tipo_de_cuenta.descripcion = "Nequi";
-                break;
-            case 106:
-                tipo_de_cuenta.codigo = cuenta.codCuenta;
-                tipo_de_cuenta.descripcion = "Fiducuenta";
-                break;
-            case 107:
-                tipo_de_cuenta.codigo = cuenta.codCuenta;
-                tipo_de_cuenta.descripcion = "CDT";
-                break;
-            default:
-                break;
+    ifstream archivoTipoCuentas("productos.txt");
+
+    if (archivoTipoCuentas.is_open()) {
+        string linea;
+        while (getline(archivoTipoCuentas, linea)) {
+             int contador=1;
+             string cedula;
+             TIPO_DE_CUENTA tipo_de_cuenta;
+            // Realiza operaciones de procesamiento en cada línea leída
+            istringstream ss(linea);
+            string dato;
+        
+            while (getline(ss, dato, ';')){
+                if(contador == 1){
+                  cedula = dato;
+                } else if(contador == 2){
+                    tipo_de_cuenta.codigo = dato;
+                } else if(contador == 3){
+                    tipo_de_cuenta.descripcion = dato;
+                }
+                contador++;
             }
-            cliente.tipoCuentas.push_back(tipo_de_cuenta);
-            
+            for(CLIENTE cliente : banco){
+                if(cliente.datosBasicos.cedula == cedula){
+                    cliente.tipoCuentas.push_back(tipo_de_cuenta);
+                    break;
+                }
+            }
         }
-     }
+
+        archivoTipoCuentas.close(); // Cierra el archivo cuando hayas terminado de leer
+    } else {
+        std::cout << "No se pudo abrir el archivo." << std::endl;
+    }
 }
 
 //Carga los datos de los productos que estan almacenados en el archivo productos.txt
 void cargarProductos(vector<CLIENTE>& banco){
-     ifstream archivoProductos("productos.txt");
+    ifstream archivoProductos("productos.txt");
 
     if (archivoProductos.is_open()) {
         string linea;
@@ -467,9 +495,9 @@ void cargarProductos(vector<CLIENTE>& banco){
 // Esta función invoca las funcionaes que cargan los datos de los archivos
 void cargarDatos(vector<CLIENTE>& banco){
     cargarPersonas(banco);
+    cargarTipoCuentas(banco);
     cargarProductos(banco);
     cargarCuentas(banco);
-    cargarTipoCuentas(banco);
 }
 
 
