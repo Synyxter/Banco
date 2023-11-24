@@ -107,7 +107,8 @@ struct CLIENTE
 
 struct TRANSACCIONES
 {
-
+int montoAbono;
+int montoRetiro;
 string numeroCuentaOrigen;
 string numeroCuentaDestino;
 
@@ -1820,7 +1821,9 @@ void menuTransacciones(vector<CLIENTE>& banco)
     getch();
 }
 
-void clienteMayorTransacciones(vector<CLIENTE> banco, vector<TRANSACCIONES> transacciones){
+void clienteMayorTransacciones(vector<CLIENTE>& banco, vector<TRANSACCIONES>& transacciones)
+{
+
 
 }
 
