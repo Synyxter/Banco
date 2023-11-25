@@ -97,7 +97,8 @@ struct PRODUCTO
 };
 struct TRANSACCION
 {
-string tipo_de_transaccion;
+    string cedula;
+    string tipo_de_transaccion;
 };
 struct CLIENTE
 {
@@ -113,7 +114,7 @@ void limpiarArchivoPersonas(){
     ofstream archivoPe("personas.txt", ios::trunc);
 
     if (!archivoPe.is_open()) {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 
     archivoPe.close();
@@ -123,7 +124,7 @@ void limpiarArchivoCuentas(){
     ofstream archivoCu("cuentas.txt", ios::trunc);
 
     if (!archivoCu.is_open()) {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 
     archivoCu.close();
@@ -133,7 +134,7 @@ void limpiarArchivoProductos(){
     ofstream archivoPro("productos.txt", ios::trunc);
 
     if (!archivoPro.is_open()) {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 
     archivoPro.close();
@@ -143,10 +144,20 @@ void limpiarTipoCuentas(){
     ofstream archivoTi("tipoCuentas.txt", ios::trunc);
 
     if (!archivoTi.is_open()) {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 
     archivoTi.close();
+}
+
+void limpiarTransacciones(){
+    ofstream archivoTran("transacciones.txt", ios::trunc);
+
+    if (!archivoTran.is_open()) {
+        cout << "No se pudo abrir el archivo." << endl;
+    }
+
+    archivoTran.close();
 }
 
 //Guarda los datos de las personas en un archivo personas.txt
@@ -275,6 +286,28 @@ void guardarProductos(vector<CLIENTE>& banco){
 
 }
 
+//Guarda los datos de las referencias de las transacciones en un archivo transacciones.txt
+void guardarTransacciones(vector<CLIENTE>& banco){
+    ofstream archivoTransacciones("transacciones.txt", ios::app);
+
+    if (archivoTransacciones.is_open()) {
+        //for que recorre los clientes
+        for(CLIENTE cliente : banco){
+            // for que recorre los productos del cliente
+            for(TRANSACCION transaccion : cliente.transacciones)
+            {
+                archivoTransacciones << transaccion.cedula;
+                archivoTransacciones << ";";
+                archivoTransacciones << transaccion.tipo_de_transaccion<<endl;
+            }
+        }
+        archivoTransacciones.close(); // Cierra el archivo cuando hayas terminado
+    } else {
+        cout << "No se pudo abrir el archivo." << endl;
+    }
+
+}
+
 // void verPersonasRegistradas(){
 //      ifstream archivo("personas.txt");
 
@@ -294,7 +327,7 @@ void guardarProductos(vector<CLIENTE>& banco){
 
 //         archivo.close(); // Cierra el archivo cuando hayas terminado de leer
 //     } else {
-//         std::cout << "No se pudo abrir el archivo." << std::endl;
+//         cout << "No se pudo abrir el archivo." << endl;
 //     }
 
 // }
@@ -309,6 +342,8 @@ void guardarDatos(vector<CLIENTE>& banco){
     guardarCuentas(banco);
     limpiarArchivoProductos();
     guardarProductos(banco);
+    limpiarTransacciones();
+    guardarTransacciones(banco);
 }
 
 //Carga los datos de las personas que estan almacenados en el archivo personas.txt
@@ -356,7 +391,7 @@ void cargarPersonas(vector<CLIENTE>& banco){
 
         archivoPersonas.close(); // Cierra el archivo cuando hayas terminado de leer
     } else {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 
 }
@@ -416,7 +451,7 @@ void cargarCuentas(vector<CLIENTE>& banco){
 
         archivoCuentas.close(); // Cierra el archivo cuando hayas terminado de leer
     } else {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 
 }
@@ -454,7 +489,7 @@ void cargarTipoCuentas(vector<CLIENTE>& banco){
 
         archivoTipoCuentas.close(); // Cierra el archivo cuando hayas terminado de leer
     } else {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 }
 
@@ -489,7 +524,43 @@ void cargarProductos(vector<CLIENTE>& banco){
 
         archivoProductos.close(); // Cierra el archivo cuando hayas terminado de leer
     } else {
-        std::cout << "No se pudo abrir el archivo." << std::endl;
+        cout << "No se pudo abrir el archivo." << endl;
+    }
+
+}
+
+//Carga los datos de las trasancciones que estan almacenados en el archivo transacciones.txt
+void cargartransacciones(vector<CLIENTE>& banco){
+    ifstream archivoTransacciones("transacciones.txt");
+
+    if (archivoTransacciones.is_open()) {
+        string linea;
+        while (getline(archivoTransacciones, linea)) {
+             int contador=1;
+             TRANSACCION transaccion;
+            // Realiza operaciones de procesamiento en cada línea leída
+            istringstream ss(linea);
+            string dato;
+        
+            while (getline(ss, dato, ';')){
+                if(contador == 1){
+                   transaccion.cedula = dato;
+                } else if(contador == 2){
+                    transaccion.tipo_de_transaccion = dato;
+                } 
+                contador++;
+            }
+            for(CLIENTE& cliente : banco){
+                if(cliente.datosBasicos.cedula == transaccion.cedula){
+                    cliente.transacciones.push_back(transaccion);
+                    break;
+                }
+            }
+        }
+
+        archivoTransacciones.close(); // Cierra el archivo cuando hayas terminado de leer
+    } else {
+        cout << "No se pudo abrir el archivo." << endl;
     }
 
 }
@@ -500,6 +571,7 @@ void cargarDatos(vector<CLIENTE>& banco){
     cargarTipoCuentas(banco);
     cargarProductos(banco);
     cargarCuentas(banco);
+    cargartransacciones(banco);
 }
 
 
