@@ -776,7 +776,6 @@ FECHACREACION obtenerFechaActual()
     fechaCreacion.anio_creacion_cuenta = 1900 + ltm->tm_year;
 
     return fechaCreacion;
-
 } 
 
 //C   U   E   N   T   A
@@ -1012,18 +1011,14 @@ void cancelarCuenta(vector<CLIENTE>& banco)
                     realizarConsignacion(cuenta);
                 }
             }
-
         }else {
 
             cuenta.estado.cod = 'C';
             cuenta.estado.descripcion = "Cancelada";
-
             cout << "La cuenta ha sido cancelada." << endl;
-
-            // Emitir un paz y salvo
+            getch();
             emitirPazYSalvo(cliente);
         }
-
         // Cambiar el estado a 'C' (Cancelado)
     }
     getch();
@@ -1240,6 +1235,7 @@ void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
          cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
          getch();
         }
+        transaccion.cedula = cliente.datosBasicos.cedula;
         transaccion.tipo_de_transaccion = "Abono";
         cliente.transacciones.push_back(transaccion);
         system("cls");
@@ -1304,6 +1300,7 @@ void consignarCuentaCorriente(vector<CLIENTE> &banco)
                         }
 
                     }
+                    transaccion.cedula = cliente.datosBasicos.cedula;
                     transaccion.tipo_de_transaccion = "Abono";
                     cliente.transacciones.push_back(transaccion);
                     system("cls");
@@ -1380,6 +1377,7 @@ void consignarTarjetaDeCredito(vector<CLIENTE>& banco)
                     cuenta.saldo -= montoAbono;
                     cuenta.disponible += montoAbono;
 
+                    transaccion.cedula = cliente.datosBasicos.cedula;
                     transaccion.tipo_de_transaccion = "Abono";
                     cliente.transacciones.push_back(transaccion);
                     system("cls");
@@ -1431,6 +1429,7 @@ void consignarPrestamo(vector<CLIENTE>& banco)
             }
         
         }
+                    transaccion.cedula = cliente.datosBasicos.cedula;
                     transaccion.tipo_de_transaccion = "Abono";
                     cliente.transacciones.push_back(transaccion);
                     system("cls");
@@ -1447,81 +1446,95 @@ void consignarPrestamo(vector<CLIENTE>& banco)
 }
 void consignarCdt(vector<CLIENTE>& banco) 
 {
-    // string numeroCuenta;
-    // int montoAbono;
-    // cout << "Ingrese su numero de cuenta: ";
-    // cin >> numeroCuenta;
-    // CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
-    // if(cliente.datosBasicos.cedula == ""){
-    //     cout << "El numero de cuenta no existe."<<endl;
-    //     getch();
-    // } else {
-    //     CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
-    //     cout << "Ingrese el valor a consignar :" << endl;
-    //     cin >> montoAbono;
+    string numeroCuenta;
+    int montoAbono;
+    cout << "Ingrese su numero de cuenta: ";
+    cin >> numeroCuenta;
+    CLIENTE& cliente = obtenerCliente(banco, "", numeroCuenta);
+    if(cliente.datosBasicos.cedula == ""){
+        cout << "El numero de cuenta no existe."<<endl;
+        getch();
+    } else {
+        TRANSACCION transaccion;
+        CUENTA cuenta = obtenerCuenta(cliente.cuentas, numeroCuenta);
+        int saldoAnterior= cuenta.saldo;
+        cout << "Ingrese el valor a consignar :" << endl;
+        cin >> montoAbono;
 
-    // if (cuenta.estado.descripcion == "Activa" || 
-    //     cuenta.estado.descripcion == "Inactiva" || 
-    //     cuenta.estado.descripcion == "Embargada")
-    //     {
-    //         // CDT
-    //         if (cuenta.plazo.dia_plazo > 0 && 
-    //         cuenta.plazo.mes_plazo > 0 && 
-    //         cuenta.plazo.anio_plazo > 0)
-    //         {
-    //             if (obtenerFechaActual())
-    //             {
-    //                 if (montoAbono > 0)
-    //                 {
-    //                     // Calcula los intereses según el plazo
-    //                     float intereses = 0.0;
-    //                     if (cuenta.plazo.dia_plazo == 30) 
-    //                     {
-    //                         intereses = montoAbono * 0.03;
-    //                     } 
-    //                     else if (cuenta.plazo.dia_plazo == 60) 
-    //                     {
-    //                         intereses = montoAbono * 0.05;
-    //                     } 
-    //                     else if (cuenta.plazo.dia_plazo == 90)
-    //                     {
-    //                         intereses = montoAbono * 0.07;
-    //                     } 
-    //                     else if (cuenta.plazo.dia_plazo == 180) 
-    //                     {
-    //                         intereses = montoAbono * 0.09;
-    //                     } 
-    //                     else if (cuenta.plazo.dia_plazo == 365) 
-    //                     {
-    //                         intereses = montoAbono * 0.15;
-    //                     }
+    if (cuenta.estado.descripcion == "Activa" || 
+        cuenta.estado.descripcion == "Inactiva" || 
+        cuenta.estado.descripcion == "Embargada")
+        {
+            // CDT
+            if (cuenta.plazo.dia_plazo > 0 && 
+            cuenta.plazo.mes_plazo > 0 && 
+            cuenta.plazo.anio_plazo > 0)
+            {
+                if ()
+                {
+                    if (montoAbono > 0)
+                    {
+                        // Calcula los intereses según el plazo
+                        float intereses = 0.0;
+                        if (cuenta.plazo.dia_plazo == 30) 
+                        {
+                            intereses = montoAbono * 0.03;
+                        } 
+                        else if (cuenta.plazo.dia_plazo == 60) 
+                        {
+                            intereses = montoAbono * 0.05;
+                        } 
+                        else if (cuenta.plazo.dia_plazo == 90)
+                        {
+                            intereses = montoAbono * 0.07;
+                        } 
+                        else if (cuenta.plazo.dia_plazo == 180) 
+                        {
+                            intereses = montoAbono * 0.09;
+                        } 
+                        else if (cuenta.plazo.dia_plazo == 365) 
+                        {
+                            intereses = montoAbono * 0.15;
+                        }
 
-    //                     // Actualiza el saldo con los intereses
-    //                    cuenta.saldo += montoAbono + intereses;
-    //                     cout << "Abono exitoso. Nuevo saldo: $" << cuenta.saldo << endl;
-    //                 }
-    //                 else
-    //                 {
-    //                     cout << "El monto a abonar debe ser mayor que cero." << endl;
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 cout << "No puede abonar a una cuenta con fecha de creación futura" << endl;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             cout << "El plazo debe ser mayor que cero." << endl;
-    //         }
-    //     } 
-    //     else if (cuenta.estado.descripcion == "Bloqueada" ||
-    //     cuenta.estado.descripcion == "Eliminada") 
-    //     {
-    //         cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
-    //     }
-    //     getch();
-    // }
+                        // Actualiza el saldo con los intereses
+                        cuenta.saldo += montoAbono + intereses;
+                        transaccion.cedula = cliente.datosBasicos.cedula;
+                        transaccion.tipo_de_transaccion = "Retiro";
+                        cliente.transacciones.push_back(transaccion);
+                        system("cls");
+                        cout << "Abono exitoso."<< endl;
+                        cout << "Usuario: " << cliente.datosBasicos.nombre << " " << cliente.datosBasicos.apellido<<endl;
+                        cout << "Cedula: " << cliente.datosBasicos.cedula <<endl;
+                        cout << "Numero de producto: " << cuenta.numeroCuenta<<endl;
+                        cout << "Valor Retirado: $" << montoAbono <<endl;
+                        cout << "Saldo Anterior: $" << saldoAnterior <<endl;
+                        cout << "Saldo actualizado: $" << cuenta.saldo <<endl;
+                        cout << "Disponible: $" <<cuenta.disponible << endl;
+                        getch();    
+                    }
+                    else
+                    {
+                        cout << "El monto a abonar debe ser mayor que cero." << endl;
+                        getch();
+                    }
+                }
+                else{
+                    cout << "No puede abonar a una cuenta con fecha de creación futura" << endl;
+                    getch();
+                }
+            }
+            else{
+                cout << "El plazo debe ser mayor que cero." << endl;
+            }
+        } 
+        else if (cuenta.estado.descripcion == "Bloqueada" ||
+        cuenta.estado.descripcion == "Eliminada") 
+        {
+            cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
+        }
+        getch();
+    }
 }
 
 //BLOQUE DE FUNCIONES DE RETIROS
@@ -1558,6 +1571,7 @@ void retiroCuentasTipoAhorro(vector<CLIENTE>& banco)
             getch();
             }
         }
+                    transaccion.cedula = cliente.datosBasicos.cedula;
                     transaccion.tipo_de_transaccion = "Retiro";
                     cliente.transacciones.push_back(transaccion);
                     system("cls");
@@ -1626,6 +1640,7 @@ void realizarRetiroCuentaCorriente(vector<CLIENTE>& banco)
             {
                 cuenta.disponible = cuenta.cupo + cuenta.saldo;
             }
+            transaccion.cedula = cliente.datosBasicos.cedula;
             transaccion.tipo_de_transaccion = "Retiro";
             cliente.transacciones.push_back(transaccion);
             system("cls");
@@ -1682,6 +1697,7 @@ void retiroTarjetaDeCredito(vector<CLIENTE>& banco)
         // Actualizar el saldo y el disponible
         cuenta.saldo += valorRetiro;
         cuenta.disponible -= valorRetiro;
+        transaccion.cedula = cliente.datosBasicos.cedula;
         transaccion.tipo_de_transaccion = "Retiro";
         cliente.transacciones.push_back(transaccion);
         // SALIDA
@@ -1749,8 +1765,14 @@ void transferencia(vector<CLIENTE>& banco)
             } else {
                 // Realizar la transferencia
                cuentaOrigen.saldo -= montoTransferencia;
+               cuentaOrigen.disponible -= montoTransferencia;
                cuentaDestino.saldo  += montoTransferencia;
+               cuentaDestino.disponible += montoTransferencia;
 
+
+
+
+            transaccion.cedula = clienteOrigen.datosBasicos.cedula;
             transaccion.tipo_de_transaccion = "Transferencia";
             clienteOrigen.transacciones.push_back(transaccion);   
          
