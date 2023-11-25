@@ -1057,8 +1057,9 @@ void menuEstadoCuenta(vector<CLIENTE>& banco) {
                 break;
             case 4:
                 cancelarCuenta(banco);
+                break;
             case 5:
-            opcion = 0;
+                opcion = 0;
                 break;
             default:
                 break;
@@ -1225,19 +1226,15 @@ void consignarCuentaTipoAhorro(vector<CLIENTE>& banco)
                     // Aumenta el saldo con el monto abonado
                     cuenta.saldo += montoAbono;
                     cuenta.disponible= cuenta.saldo;
-                else
-                {
+                } else {
                     cout << "El monto a abonar debe ser mayor que cero." << endl;
                     getch();
                 }
-            }
-            else
-            {
+            } else {
                 cout << "Esta cuenta no permite abonos." << endl;
                 getch();
             }
-        }
-        else if (cuenta.estado.descripcion == "Bloqueada" ||
+        } else if (cuenta.estado.descripcion == "Bloqueada" ||
                 cuenta.estado.descripcion == "Eliminada") 
         {
          cout << "No puede abonar a una cuenta bloqueada o eliminada" << endl;
