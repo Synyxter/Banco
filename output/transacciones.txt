@@ -1,4 +1,0 @@
-123;Abono
-123;Retiro
-123;Transferencia
-456;Abono
